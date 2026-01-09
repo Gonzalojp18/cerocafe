@@ -183,7 +183,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
 
           {/* Footer */}
           <footer className="text-center py-6 text-xs text-[#1A3C34]/60 tracking-wider mb-8">
-            © 2024 JULIETTE · Café de Especialidad
+            © 2024 Cero · Café de Origen
           </footer>
         </motion.div>
       )}

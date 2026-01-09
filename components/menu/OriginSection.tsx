@@ -25,13 +25,13 @@ const OriginSection = () => {
             </div>
             <div>
               <h4 className="font-medium text-[#1A3C34] mb-1">Instagram</h4>
-              <a 
-                href="https://instagram.com/juliette_cafe_" 
-                target="_blank" 
+              <a
+                href="https://www.instagram.com/cerocafedeorigen/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#1A3C34]/70 hover:text-[#1A3C34] transition-colors"
               >
-                @juliette_cafe_
+                @cerocafedeorigen
               </a>
             </div>
           </div>
@@ -79,9 +79,8 @@ const OriginSection = () => {
             <div>
               <h4 className="font-medium text-[#1A3C34] mb-1">Horarios</h4>
               <div className="text-[#1A3C34]/70 text-sm space-y-1">
-                <p>Lunes: 15:30 a 20:00</p>
-                <p>Martes a Sábado: 9:30 a 20:00</p>
-                <p>Domingo: Cerrado</p>
+                <p>Lunes a Viernes: 8:00 a 20:00</p>
+                <p>Sábado, Domingo y Feriados: 9:00 a 21:00</p>
               </div>
             </div>
           </div>
@@ -93,14 +92,14 @@ const OriginSection = () => {
             </div>
             <div>
               <h4 className="font-medium text-[#1A3C34] mb-1">Ubicación</h4>
-              <a 
-                href="https://maps.google.com/?q=Mendez+de+Andes+900,+CABA"
+              <a
+                href="https://maps.google.com/?q=Av+Congreso+5080,+Villa+Urquiza,+Buenos+Aires,+Argentina"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#1A3C34]/70 hover:text-[#1A3C34] transition-colors text-sm block leading-relaxed"
               >
-                Mendez de Andes 900<br />
-                CABA, Buenos Aires<br />
+                Av Congreso 5080<br />
+                Villa Urquiza, Buenos Aires<br />
                 Argentina
               </a>
             </div>
