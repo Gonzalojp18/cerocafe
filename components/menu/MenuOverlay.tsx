@@ -7,6 +7,7 @@ import OriginSection from "./OriginSection";
 import CupSizeGuide from "./CupSizeGuide";
 import MenuBottomNav from "./MenuBottomNav";
 import LoadingTransition from "../LoadingTransition";
+import UserMenu from "../UserMenu";
 import { useState, useEffect } from "react";
 
 interface Product {
@@ -106,8 +107,10 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
           >
             <div className="flex items-center justify-between px-6 py-4 max-w-2xl mx-auto">
               <div>
-                <h2 className="text-lg font-serif font-medium tracking-[0.1em] text-black">MENÚ</h2>
-                <p className="text-xs text-black/70 tracking-wider">CERO</p>
+                <h2 className="text-lg font-serif font-medium tracking-[0.1em] text-black">Bienvenido</h2>
+                <div className="mt-1">
+                  <UserMenu />
+                </div>
               </div>
 
               <motion.button

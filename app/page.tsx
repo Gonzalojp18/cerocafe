@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import MenuButton from "@/components/MenuButton";
 // import ImageGallery from "@/components/ImageGallery";
 import MenuOverlay from "@/components/menu/MenuOverlay";
-import UserMenu from "@/components/UserMenu";
+// import UserMenu from "@/components/UserMenu";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -95,9 +95,9 @@ export default function Home() {
       </div>
 
       {/* User Menu (top right, moved down to avoid overlapping "HABITAR") */}
-      <div className="absolute top-16 right-6 md:top-20 md:right-12 z-50">
+      {/* <div className="absolute top-16 right-6 md:top-20 md:right-12 z-50">
         <UserMenu />
-      </div>
+      </div> */}
 
       {/* Settings Icon (solo para staff/owner) */}
       {(session?.user?.role === 'staff' || session?.user?.role === 'owner') && (
