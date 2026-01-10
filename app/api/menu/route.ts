@@ -52,8 +52,8 @@ export async function GET() {
     
     if (dishes.length > 0) {
       console.log('🍽️ Primer plato:', JSON.stringify(dishes[0], null, 2));
-      const categories = dishes.map(dish => dish.categoria);
-      const uniqueCategories = categories.filter((cat, index) => categories.indexOf(cat) === index);
+      const dishCategories = dishes.map(dish => dish.categoria);
+      const uniqueCategories = dishCategories.filter((cat, index) => dishCategories.indexOf(cat) === index);
       console.log('🍽️ Categorías de platos:', uniqueCategories);
       
       // Si hay datos reales, usarlos

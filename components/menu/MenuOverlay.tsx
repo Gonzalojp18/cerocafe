@@ -31,6 +31,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
 
   // Icon mapping for categories
   const getCategoryIcon = (categoryName: string) => {
+    if (!categoryName) return Coffee;
     const normalized = categoryName.toLowerCase();
     if (normalized.includes('just coffee') || normalized.includes('cafe puro')) return Coffee;
     if (normalized.includes('milk') || normalized.includes('leche')) return CupSoda;
@@ -154,7 +155,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
 
                 return (
                   <MenuCategory
-                    key={category.title}
+                    key={categoryId}
                     id={categoryId}
                     title={category.title}
                     products={category.products}
@@ -175,7 +176,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
           <MenuBottomNav
             categories={menuData.map((cat, idx) => ({
               id: `category-${idx}`,
-              label: cat.title.split(' ')[0], // Short name (first word)
+              label: cat.title ? cat.title.split(' ')[0] : 'Menu', // Short name (first word)
               icon: getCategoryIcon(cat.title)
             }))}
             onSelect={handleScrollToCategory}

@@ -32,7 +32,7 @@ const MenuCategory = ({ title, products, index, icon: Icon, id }: MenuCategoryPr
           </div>
         )}
         <h3 className="text-2xl font-serif text-black tracking-wide" style={{ fontFamily: 'var(--font-abril)' }}>
-          {title.toLowerCase()}
+          {title ? title.toLowerCase() : 'Menu'}
         </h3>
         <div className="h-[1px] flex-1 bg-black/10 ml-4 opacity-50"></div>
       </div>

@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, TrendingUp, Users, Package } from 'lucide-react';
+import SalesAnalytics from './SalesAnalytics';
+import CustomerAnalytics from './CustomerAnalytics';
+import InventoryReports from './InventoryReports';
 
 interface AnalyticsData {
   totalVentas: { total: number; count: number };
@@ -126,6 +129,15 @@ export default function AnalyticsDashboard() {
           </CardContent>
         </Card>
       )}
+
+      {/* Gráficos de ventas */}
+      <SalesAnalytics />
+
+      {/* Analytics de clientes */}
+      <CustomerAnalytics />
+
+      {/* Reportes de inventario */}
+      <InventoryReports />
 
       {/* Platos más populares */}
       <Card>
