@@ -11,14 +11,14 @@ const abrilFatface = Abril_Fatface({
 })
 
 export const metadata: Metadata = {
-  title: 'Juliette',
-  description: 'Coffee & Pastry Shop',
+  title: 'Cero Cafe de Origen',
+  description: 'cafe de origen',
   manifest: '/manifest.json',
   themeColor: '#1A3C34',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Juliette',
+    title: 'Cero Cafe de Origen',
   },
 }
 

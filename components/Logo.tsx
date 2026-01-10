@@ -13,17 +13,6 @@ const Logo = ({ className = "" }: { className?: string }) => {
         <h1 className="font-serif pt-4 text-[4rem] md:text-[7rem] leading-none text-black relative z-10" style={{ fontFamily: 'var(--font-abril)' }}>
           Cero
         </h1>
-
-        {/* Steam / Aroma Icon above 'u' */}
-        <svg
-          className="absolute top-[-20px] left-[22%] md:left-[24%] w-12 h-16 md:w-16 md:h-20 text-black"
-          viewBox="0 0 50 100"
-          fill="currentColor"
-        >
-          <path d="M15 50 C 15 30, 35 30, 35 10" stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round" />
-          <path d="M5 60 C 5 40, 25 40, 25 20" stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round" />
-        </svg>
-
         {/* Curved Text "Café de especialidad" */}
         <div className="absolute top-[10%] -right-[10%] md:-right-[15%] w-[120px] h-[120px] md:w-[150px] md:h-[150px] pointer-events-none">
           <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">

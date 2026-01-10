@@ -1,6 +1,6 @@
 {
-    "name": "Juliette - Menú y Puntos",
-    "short_name": "Juliette",
+    "name": "Cero - Cafe de Origen",
+    "short_name": "CERO",
     "description": "Menú digital y sistema de puntos",
     "start_url": "/",
     "display": "standalone",
@@ -9,12 +9,12 @@
     "icons": [
         {
             "src": "/juliete192.png",
-            "sizes": "192x71",
+            "sizes": "192x144",
             "type": "image/png"
         },
         {
             "src": "/juliete512.png",
-            "sizes": "397x146",
+            "sizes": "512x384",
             "type": "image/png"
         }
     ]
