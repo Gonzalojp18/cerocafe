@@ -142,8 +142,8 @@ export default function UserMenu() {
                             </div>
                         </div>
 
-                        {/* Notificaciones - Solo para customers */}
-                        {session.user.role === 'customer' && (
+                        {/* Notificaciones */}
+                        {(
                             <div className="p-4 border-b border-gray-200">
                                 <button
                                     onClick={toggleNotifications}

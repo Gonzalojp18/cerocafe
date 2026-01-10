@@ -7,7 +7,7 @@ if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY)
     console.error('VAPID keys no encontradas en variables de entorno')
 } else {
     webpush.setVapidDetails(
-        'mailto:pgonzalojose@gmail.com',
+        'mailto:siriusweb256@gmail.com',
         process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
         process.env.VAPID_PRIVATE_KEY
     )
