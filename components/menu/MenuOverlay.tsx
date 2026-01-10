@@ -6,7 +6,8 @@ import MenuCategory from "./MenuCategory";
 import OriginSection from "./OriginSection";
 import CupSizeGuide from "./CupSizeGuide";
 import MenuBottomNav from "./MenuBottomNav";
-import { useEffect, useState } from "react";
+import LoadingTransition from "../LoadingTransition";
+import { useState, useEffect } from "react";
 
 interface Product {
   name: string;
@@ -57,9 +58,14 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
 
   useEffect(() => {
     if (isOpen) {
+      setLoading(true); // Reset loading state on open
       const fetchMenu = async () => {
         try {
-          const res = await fetch('/api/menu');
+          // Promise.all to ensure minimum 2s loading time for the animation
+          const [res] = await Promise.all([
+            fetch('/api/menu'),
+            new Promise(resolve => setTimeout(resolve, 2000))
+          ]);
           const data = await res.json();
           setMenuData(data);
         } catch (error) {
@@ -76,11 +82,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
   if (loading) {
     return (
       <AnimatePresence>
-        {isOpen && (
-          <motion.div className="fixed inset-0 z-50 bg-[#E4D8B9] flex items-center justify-center">
-            <p className="text-lg text-black">Cargando menú...</p>
-          </motion.div>
-        )}
+        {isOpen && <LoadingTransition />}
       </AnimatePresence>
     );
   }
