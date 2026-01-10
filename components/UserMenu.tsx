@@ -155,7 +155,7 @@ export default function UserMenu() {
                     />
 
                     {/* Dropdown Menu */}
-                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
+                    <div className="absolute left-2 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
                         <div className="p-4 border-b border-gray-200 bg-gray-50">
                             <p className="font-semibold text-gray-900">{session.user.name}</p>
                             <p className="text-xs text-gray-600">{session.user.email}</p>
