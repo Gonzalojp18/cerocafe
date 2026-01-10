@@ -15,7 +15,7 @@ interface MenuBottomNavProps {
 const MenuBottomNav = ({ categories, onSelect }: MenuBottomNavProps) => {
     return (
         <motion.div
-            className="fixed bottom-0 left-0 w-full bg-[#FB732F] border-t border-black/10 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe"
+            className="fixed bottom-0 left-0 w-full bg-black/90 border-t border-black/10 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe"
             initial={{ y: 100 }}
             animate={{ y: 0 }}
             transition={{ delay: 0.5, type: "spring", stiffness: 100, damping: 20 }}
@@ -29,10 +29,10 @@ const MenuBottomNav = ({ categories, onSelect }: MenuBottomNavProps) => {
                             onClick={() => onSelect(cat.id)}
                             className="flex flex-col items-center gap-1 min-w-[72px] p-2 rounded-xl active:bg-white/10 transition-colors duration-200"
                         >
-                            <div className="w-10 h-8 rounded-full flex items-center justify-center text-white">
+                            <div className="w-10 h-8 rounded-full flex items-center justify-center text-[#fb732f]">
                                 <Icon size={30} strokeWidth={1.5} />
                             </div>
-                            <span className="text-[12px] font-medium text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+                            <span className="text-[12px] font-medium text-[#fb732f] whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
                                 {cat.label}
                             </span>
                         </button>

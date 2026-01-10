@@ -27,7 +27,7 @@ const MenuCategory = ({ title, products, index, icon: Icon, id }: MenuCategoryPr
     >
       <div className="flex items-center gap-3 mb-6">
         {Icon && (
-          <div className="p-2 rounded-full bg-[#FB732F] text-white">
+          <div className="p-2 rounded-full bg-[#FB732F] text-black">
             <Icon size={20} strokeWidth={1.5} />
           </div>
         )}

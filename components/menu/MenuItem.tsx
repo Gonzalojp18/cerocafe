@@ -23,7 +23,7 @@ const MenuItem = ({ name, description, price, delay = 0 }: MenuItemProps) => {
         {/* Dotted line filler - optional, but nice for menus */}
         <div className="flex-1 border-b border-dotted border-black/20 mx-2 mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-        <span className="text-lg font-semibold text-[#FB732F] whitespace-nowrap">
+        <span className="text-lg font-bold text-[#ffa940] whitespace-nowrap">
           ${parseInt(price.toString()).toLocaleString('es-AR')}
         </span>
       </div>

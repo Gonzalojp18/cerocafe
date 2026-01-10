@@ -6,6 +6,7 @@ import MenuCategory from "./MenuCategory";
 import OriginSection from "./OriginSection";
 import CupSizeGuide from "./CupSizeGuide";
 import MenuBottomNav from "./MenuBottomNav";
+import FeaturedDishes from "./FeaturedDishes";
 import LoadingTransition from "../LoadingTransition";
 import UserMenu from "../UserMenu";
 import { useState, useEffect } from "react";
@@ -180,6 +181,9 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
                 );
               })}
             </div>
+
+            {/* Featured Dishes */}
+            <FeaturedDishes />
 
             {/* Origin Section */}
             <div className="mt-20">

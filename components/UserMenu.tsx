@@ -127,7 +127,7 @@ export default function UserMenu() {
         return (
             <Link
                 href="/login"
-                className="flex items-center gap-2 px-4 py-2 bg-[#FB732F] text-white rounded-full text-sm hover:bg-[#FB732F]/90 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[#FB732F] text-black rounded-full text-sm hover:bg-[#FB732F]/90 transition-colors"
             >
                 <LogIn className="h-4 w-4" />
                 Iniciar sesión
@@ -139,7 +139,7 @@ export default function UserMenu() {
         <div className="relative z-50">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-4 px-6 py-2 bg-[#FB732F] text-white rounded-full text-xs hover:bg-[#FB732F]/90 transition-colors"
+                className="flex items-center gap-4 px-6 py-2 bg-[#FB732F] text-black rounded-full text-xs hover:bg-[#FB732F]/90 transition-colors"
             >
                 <User className="h-4 w-4 " />
                 <span className="md:inline">{session.user.name}</span>

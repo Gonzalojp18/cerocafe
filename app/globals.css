@@ -65,8 +65,8 @@
     background-image:
       radial-gradient(at 5% 95%, #e9f5ff 0px, transparent 30%),
       radial-gradient(at 95% 95%, #d3f5ef 0px, transparent 30%),
-      radial-gradient(at 50% 120%, #FFBB28 0px, transparent 60%),
-      radial-gradient(at 50% 120%, #FF8042 0px, transparent 80%),
+      radial-gradient(at 50% 120%, #ffa940 0px, transparent 70%),
+      radial-gradient(at 50% 120%, #fb732f 0px, transparent 80%),
       radial-gradient(at 50% 50%, #bdbaf0 0px, transparent 30%);
     background-size: 200% 200%;
     animation: aura-up 8s ease infinite;
