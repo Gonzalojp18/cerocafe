@@ -30,6 +30,7 @@ interface MenuOverlayProps {
 const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
   const [menuData, setMenuData] = useState<CategoryData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showHeader, setShowHeader] = useState(true);
 
   // Icon mapping for categories
   const getCategoryIcon = (categoryName: string) => {
@@ -55,6 +56,12 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
       // Offset for fixed header if needed, but 'scroll-mt' in CSS usually handles it.
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    // Show header only when at the very top (within 10px threshold)
+    setShowHeader(scrollTop < 10);
   };
 
   useEffect(() => {
@@ -97,13 +104,17 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
+          onScroll={handleScroll}
         >
           {/* Header */}
           <motion.header
             className="sticky top-0 z-10 bg-[#E4D8B9]/95 backdrop-blur-sm border-b border-black/10"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
+            initial={{ y: 0, opacity: 1 }}
+            animate={{
+              y: showHeader ? 0 : -100,
+              opacity: showHeader ? 1 : 0
+            }}
+            transition={{ duration: 0.3 }}
           >
             <div className="flex items-center justify-between px-6 py-4 max-w-2xl mx-auto">
               <div>
