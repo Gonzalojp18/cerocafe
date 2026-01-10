@@ -7,6 +7,7 @@ export async function POST(request: Request) {
         const { name, dni, email, password, secretKey } = await request.json()
 
         // Clave secreta para proteger este endpoint
+        // Permitir 'siriusblack' como fallback para desarrollo/pruebas si la env var no coincide
         if (secretKey !== process.env.OWNER_CREATION_SECRET && secretKey !== 'siriusblack') {
             return NextResponse.json(
                 { error: 'No autorizado' },
@@ -41,25 +42,25 @@ export async function POST(request: Request) {
         // Hash de la contraseña
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // Crear staff
-        const newStaff = {
+        // Crear owner
+        const newOwner = {
             name,
             dni,
             email,
             password: hashedPassword,
             points: 0,
-            role: 'staff',
+            role: 'owner',
             createdAt: new Date()
         }
 
-        await usersCollection.insertOne(newStaff)
+        await usersCollection.insertOne(newOwner)
 
         return NextResponse.json(
-            { message: 'Usuario staff creado exitosamente' },
+            { message: 'Usuario owner creado exitosamente' },
             { status: 201 }
         )
     } catch (error) {
-        console.error('Error al crear staff:', error)
+        console.error('Error al crear owner:', error)
         return NextResponse.json(
             { error: 'Error interno del servidor' },
             { status: 500 }
