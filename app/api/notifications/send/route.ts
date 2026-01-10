@@ -49,8 +49,8 @@ export async function POST(request: Request) {
         const payload = JSON.stringify({
             title,
             body: content,
-            icon: '/juliete192.png',
-            badge: '/juliete192.png'
+            icon: '/cero192.png',
+            badge: '/cero192.png'
         })
 
         // Enviar la notificación

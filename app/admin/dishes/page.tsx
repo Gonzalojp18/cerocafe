@@ -20,6 +20,8 @@ interface Dish {
   categoria: string;
   disponible: boolean;
   orden: number;
+  inventario?: number;
+  stockMinimo?: number;
 }
 
 interface Category {
@@ -40,6 +42,8 @@ export default function DishesPage() {
     categoria: '',
     disponible: true,
     orden: 0,
+    inventario: 0,
+    stockMinimo: 10,
   });
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
@@ -87,7 +91,7 @@ export default function DishesPage() {
         });
         setDialogOpen(false);
         setEditingDish(null);
-        setFormData({ nombre: '', descripcion: '', precio: 0, categoria: '', disponible: true, orden: 0 });
+        setFormData({ nombre: '', descripcion: '', precio: 0, categoria: '', disponible: true, orden: 0, inventario: 0, stockMinimo: 10 });
         fetchData();
       } else {
         throw new Error();
@@ -110,6 +114,8 @@ export default function DishesPage() {
       categoria: dish.categoria,
       disponible: dish.disponible,
       orden: dish.orden,
+      inventario: dish.inventario || 0,
+      stockMinimo: dish.stockMinimo || 10,
     });
     setDialogOpen(true);
   };
@@ -138,7 +144,7 @@ export default function DishesPage() {
 
   const openAddDialog = () => {
     setEditingDish(null);
-    setFormData({ nombre: '', descripcion: '', precio: 0, categoria: '', disponible: true, orden: 0 });
+    setFormData({ nombre: '', descripcion: '', precio: 0, categoria: '', disponible: true, orden: 0, inventario: 0, stockMinimo: 10 });
     setDialogOpen(true);
   };
 
@@ -167,7 +173,8 @@ export default function DishesPage() {
             <TableHead>Price</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Available</TableHead>
-            <TableHead>Order</TableHead>
+            <TableHead>Stock</TableHead>
+            <TableHead>Min Stock</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -183,6 +190,10 @@ export default function DishesPage() {
               <TableCell>{dish.categoria}</TableCell>
               <TableCell>{dish.disponible ? 'Yes' : 'No'}</TableCell>
               <TableCell>{dish.orden}</TableCell>
+              <TableCell className={dish.inventario && dish.stockMinimo && dish.inventario <= dish.stockMinimo ? 'text-red-600 font-bold' : ''}>
+                {dish.inventario || 0}
+              </TableCell>
+              <TableCell>{dish.stockMinimo || 10}</TableCell>
               <TableCell>
                 <Button variant="ghost" size="sm" onClick={() => handleEdit(dish)} className="mr-2">
                   <Edit className="h-4 w-4" />
@@ -261,6 +272,24 @@ export default function DishesPage() {
                 type="number"
                 value={formData.orden}
                 onChange={(e) => setFormData({ ...formData, orden: parseInt(e.target.value) })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="inventario">Stock</Label>
+              <Input
+                id="inventario"
+                type="number"
+                value={formData.inventario}
+                onChange={(e) => setFormData({ ...formData, inventario: parseInt(e.target.value) })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="stockMinimo">Stock Mínimo</Label>
+              <Input
+                id="stockMinimo"
+                type="number"
+                value={formData.stockMinimo}
+                onChange={(e) => setFormData({ ...formData, stockMinimo: parseInt(e.target.value) })}
               />
             </div>
             <Button type="submit">{editingDish ? 'Update' : 'Create'}</Button>

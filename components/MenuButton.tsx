@@ -8,7 +8,7 @@ const MenuButton = ({ onClick }: MenuButtonProps) => {
   return (
     <motion.button
       onClick={onClick}
-      className="menu-button text-xl font-medium bg-[#1A3C34] text-white p-4 rounded-md"
+      className="menu-button text-xl font-medium bg-[#FB732F] text-white p-4 rounded-md"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}

@@ -27,15 +27,14 @@ const MenuCategory = ({ title, products, index, icon: Icon, id }: MenuCategoryPr
     >
       <div className="flex items-center gap-3 mb-6">
         {Icon && (
-          // <div className="p-2 rounded-full bg-[#1A3C34]/5 text-[#1A3C34]">
-          <div className="p-2 rounded-full bg-[#1A3C34] text-white">
+          <div className="p-2 rounded-full bg-[#FB732F] text-white">
             <Icon size={20} strokeWidth={1.5} />
           </div>
         )}
-        <h3 className="text-2xl font-serif text-[#1A3C34] tracking-wide" style={{ fontFamily: 'var(--font-abril)' }}>
+        <h3 className="text-2xl font-serif text-black tracking-wide" style={{ fontFamily: 'var(--font-abril)' }}>
           {title.toLowerCase()}
         </h3>
-        <div className="h-[1px] flex-1 bg-[#1A3C34]/10 ml-4 opacity-50"></div>
+        <div className="h-[1px] flex-1 bg-black/10 ml-4 opacity-50"></div>
       </div>
 
       <div className="space-y-6">

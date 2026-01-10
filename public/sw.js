@@ -1,14 +1,14 @@
 // Service Worker para PWA con notificaciones push
 
 // Versión del cache
-const CACHE_NAME = 'juliette-v1'
+const CACHE_NAME = 'cero-v1'
 
 // Archivos a cachear
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/juliete192.png',
-  '/juliete512.png'
+  '/cero192.png',
+  '/cero512.png'
 ]
 
 // Instalación del Service Worker
@@ -67,8 +67,8 @@ self.addEventListener('push', function(event) {
     
     const options = {
       body: data.body,
-      icon: data.icon || '/juliete192.png',
-      badge: data.badge || '/juliete192.png',
+      icon: data.icon || '/cero192.png',
+      badge: data.badge || '/cero192.png',
       vibrate: [200, 100, 200],
       data: {
         dateOfArrival: Date.now(),

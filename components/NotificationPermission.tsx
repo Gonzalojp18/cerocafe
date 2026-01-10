@@ -118,7 +118,7 @@ export default function NotificationPermission() {
           </div>
         ) : isSubscribed ? (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-green-600">
+            <div className="flex items-center gap-2 text-[#FB732F]">
               <Bell className="h-4 w-4" />
               <span className="text-sm font-medium">Notificaciones activas</span>
             </div>
@@ -136,7 +136,7 @@ export default function NotificationPermission() {
           <Button 
             onClick={requestPermission} 
             disabled={loading}
-            className="w-full"
+            className="w-full bg-[#FB732F] hover:bg-[#FB732F]/90"
           >
             <Bell className="h-4 w-4 mr-2" />
             {loading ? 'Activando...' : 'Activar notificaciones'}

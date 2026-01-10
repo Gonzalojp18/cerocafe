@@ -9,14 +9,14 @@ const Logo = ({ className = "" }: { className?: string }) => {
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
       <div className="relative flex items-center justify-center">
-        {/* Main Text "Juliette" */}
-        <h1 className="font-serif pt-4 text-[4rem] md:text-[7rem] leading-none text-[#1A3C34] relative z-10" style={{ fontFamily: 'var(--font-abril)' }}>
-          Juliette
+        {/* Main Text "Cero" */}
+        <h1 className="font-serif pt-4 text-[4rem] md:text-[7rem] leading-none text-black relative z-10" style={{ fontFamily: 'var(--font-abril)' }}>
+          Cero
         </h1>
 
         {/* Steam / Aroma Icon above 'u' */}
         <svg
-          className="absolute top-[-20px] left-[22%] md:left-[24%] w-12 h-16 md:w-16 md:h-20 text-[#1A3C34]"
+          className="absolute top-[-20px] left-[22%] md:left-[24%] w-12 h-16 md:w-16 md:h-20 text-black"
           viewBox="0 0 50 100"
           fill="currentColor"
         >
@@ -33,9 +33,9 @@ const Logo = ({ className = "" }: { className?: string }) => {
               fill="none"
               stroke="none"
             />
-            <text className="text-[4px] md:text-[6px] uppercase tracking-widest font-medium fill-[#1A3C34]">
+            <text className="text-[4px] md:text-[6px] uppercase tracking-widest font-medium fill-black">
               <textPath href="#curve" startOffset="60%" textAnchor="middle">
-                Café de especialidad
+                Café de Origen
               </textPath>
             </text>
           </svg>

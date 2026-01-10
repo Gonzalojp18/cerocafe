@@ -40,7 +40,7 @@ const ImageGallery = () => {
           </motion.div>
           
           {/* Subtle overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
         </motion.div>
       ))}
     </div>

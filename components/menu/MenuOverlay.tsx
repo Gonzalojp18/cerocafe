@@ -76,8 +76,8 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
     return (
       <AnimatePresence>
         {isOpen && (
-          <motion.div className="fixed inset-0 z-50 bg-background flex items-center justify-center">
-            <p className="text-lg text-[#1A3C34]">Cargando menú...</p>
+          <motion.div className="fixed inset-0 z-50 bg-[#E4D8B9] flex items-center justify-center">
+            <p className="text-lg text-black">Cargando menú...</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -88,7 +88,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 bg-[#Fdfbf7] overflow-y-auto pb-28"
+          className="fixed inset-0 z-50 bg-[#E4D8B9] overflow-y-auto pb-28"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -96,21 +96,21 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
         >
           {/* Header */}
           <motion.header
-            className="sticky top-0 z-10 bg-[#Fdfbf7]/95 backdrop-blur-sm border-b border-[#1A3C34]/10"
+            className="sticky top-0 z-10 bg-[#E4D8B9]/95 backdrop-blur-sm border-b border-black/10"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
             <div className="flex items-center justify-between px-6 py-4 max-w-2xl mx-auto">
               <div>
-                <h2 className="text-lg font-serif font-medium tracking-[0.1em] text-[#1A3C34]">MENÚ</h2>
-                <p className="text-xs text-[#1A3C34]/70 tracking-wider">JULIETTE</p>
+                <h2 className="text-lg font-serif font-medium tracking-[0.1em] text-black">MENÚ</h2>
+                <p className="text-xs text-black/70 tracking-wider">CERO</p>
               </div>
 
               <motion.button
                 onClick={onClose}
-                className="w-10 h-10 rounded-full bg-[#1A3C34]/5 flex items-center justify-center 
-                         hover:bg-[#1A3C34] hover:text-white transition-colors duration-200 text-[#1A3C34]"
+                className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center 
+                         hover:bg-[#FB732F] hover:text-white transition-colors duration-200 text-black"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -128,17 +128,17 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="w-12 h-[2px] bg-[#1A3C34]/20 mx-auto mb-6" />
-              <p className="text-sm text-[#1A3C34]/80 leading-relaxed max-w-sm mx-auto font-medium">
+              <div className="w-12 h-[2px] bg-black/20 mx-auto mb-6" />
+              <p className="text-sm text-black/80 leading-relaxed max-w-sm mx-auto font-medium">
                 Luz natural, texturas crudas y el aroma de especialidad.
                 Disfruta de la calma de nuestro jardín interior o de la energía de nuestra barra naranja.
               </p>
-              <div className="w-12 h-[2px] bg-[#1A3C34]/20 mx-auto mt-6" />
+              <div className="w-12 h-[2px] bg-black/20 mx-auto mt-6" />
             </motion.div>
 
             {/* Cup Size Guide */}
             <motion.div
-              className="mb-12 border-b border-[#1A3C34]/10 pb-8"
+              className="mb-12 border-b border-black/10 pb-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -182,7 +182,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
           />
 
           {/* Footer */}
-          <footer className="text-center py-6 text-xs text-[#1A3C34]/60 tracking-wider mb-8">
+          <footer className="text-center py-6 text-xs text-black/60 tracking-wider mb-8">
             © 2024 Cero · Café de Origen
           </footer>
         </motion.div>

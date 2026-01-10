@@ -58,7 +58,7 @@ const CupIcon = ({
 
 const CupSizeGuide = () => {
     return (
-        <div className="w-full flex flex-wrap justify-center items-end gap-x-6 gap-y-8 py-8 text-[#1A3C34]">
+        <div className="w-full flex flex-wrap justify-center items-end gap-x-6 gap-y-8 py-8 text-black">
             {/* 150ml */}
             <div className="flex flex-col items-center gap-2">
                 <CupIcon type="cup" scale={1} />

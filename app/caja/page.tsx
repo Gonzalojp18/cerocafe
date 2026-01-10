@@ -149,7 +149,7 @@ export default function CajaPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: cliente._id,
-          title: '👋 Mensaje desde Juliette',
+          title: '👋 Mensaje desde Cero',
           body: `Hola ${cliente.name}, tienes ${cliente.points} puntos acumulados`
         })
       })
@@ -242,7 +242,7 @@ export default function CajaPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Puntos Acumulados</p>
-                <p className="text-2xl font-bold text-green-600">{cliente.points}</p>
+                <p className="text-2xl font-bold text-[#FB732F]">{cliente.points}</p>
               </div>
             </div>
 
@@ -261,7 +261,7 @@ export default function CajaPage() {
                 <Button
                   onClick={() => gestionarPuntos('add')}
                   disabled={procesando}
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-[#FB732F] hover:bg-[#FB732F]/90"
                 >
                   Agregar
                 </Button>

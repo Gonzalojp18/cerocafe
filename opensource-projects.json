@@ -1,0 +1,85 @@
+{
+  "projects": [
+    {
+      "name": "Cero Cafe",
+      "description": "A modern cafe management application built with Next.js, featuring authentication, database integration, and responsive UI components",
+      "technologies": [
+        "Next.js 16.1.1",
+        "React 18.3.1",
+        "TypeScript",
+        "Tailwind CSS",
+        "Radix UI",
+        "MongoDB",
+        "Mongoose",
+        "NextAuth.js",
+        "React Hook Form",
+        "Framer Motion",
+        "shadcn/ui"
+      ],
+      "features": [
+        "User authentication and authorization",
+        "Database integration with MongoDB",
+        "Responsive design with Tailwind CSS",
+        "Modern UI components with Radix UI",
+        "Form handling with React Hook Form",
+        "Animations with Framer Motion",
+        "Data fetching with TanStack Query",
+        "PWA capabilities with next-pwa",
+        "Web push notifications",
+        "Dark mode support"
+      ],
+      "project_type": "Full-stack web application",
+      "license": "Private",
+      "repository_url": "https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID",
+      "project_structure": {
+        "frontend": {
+          "framework": "Next.js",
+          "styling": "Tailwind CSS",
+          "components": "Radix UI + shadcn/ui",
+          "state_management": "React hooks + TanStack Query"
+        },
+        "backend": {
+          "database": "MongoDB with Mongoose ODM",
+          "authentication": "NextAuth.js",
+          "api_routes": "Next.js API routes"
+        },
+        "development_tools": {
+          "package_manager": "npm",
+          "linting": "ESLint",
+          "type_checking": "TypeScript",
+          "css_processing": "PostCSS"
+        }
+      },
+      "key_dependencies": {
+        "ui_framework": "@radix-ui",
+        "database": "mongodb, mongoose",
+        "authentication": "next-auth, bcryptjs",
+        "form_handling": "@hookform/resolvers, react-hook-form, zod",
+        "data_fetching": "@tanstack/react-query",
+        "animations": "framer-motion",
+        "icons": "lucide-react",
+        "notifications": "web-push, sonner"
+      },
+      "development_commands": {
+        "development": "npm run dev",
+        "build": "npm run build", 
+        "production": "npm run start",
+        "linting": "npm run lint"
+      },
+      "deployment": {
+        "platform": "Lovable/Vercel compatible",
+        "build_tool": "Next.js",
+        "static_generation": "Available"
+      }
+    }
+  ],
+  "summary": {
+    "total_projects": 1,
+    "primary_stack": "Next.js full-stack",
+    "main_languages": ["TypeScript", "JavaScript"],
+    "databases": ["MongoDB"],
+    "ui_frameworks": ["Radix UI", "Tailwind CSS"],
+    "authentication_methods": ["NextAuth.js"],
+    "project_categories": ["Web Application", "Cafe Management"]
+  }
+}

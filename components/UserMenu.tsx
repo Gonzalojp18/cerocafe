@@ -100,7 +100,7 @@ export default function UserMenu() {
         return (
             <Link
                 href="/login"
-                className="absolute top-4 right-4 md:top-6 md:right-16 flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors z-50"
+                className="absolute top-4 right-4 md:top-6 md:right-16 flex items-center gap-2 px-4 py-2 bg-[#FB732F] text-white rounded-full text-sm hover:bg-[#FB732F]/90 transition-colors z-50"
             >
                 <LogIn className="h-4 w-4" />
                 Iniciar sesión
@@ -112,7 +112,7 @@ export default function UserMenu() {
         <div className="absolute top-4 right-4 md:top-6 md:right-16 z-50">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[#FB732F] text-white rounded-full text-sm hover:bg-[#FB732F]/90 transition-colors"
             >
                 <User className="h-4 w-4" />
                 <span className="hidden md:inline">{session.user.name}</span>
@@ -138,7 +138,7 @@ export default function UserMenu() {
                         <div className="p-4 border-b border-gray-200">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-gray-600">Puntos acumulados</span>
-                                <span className="text-2xl font-bold text-black">{session.user.points}</span>
+                                <span className="text-2xl font-bold text-[#FB732F]">{session.user.points}</span>
                             </div>
                         </div>
 
@@ -152,13 +152,13 @@ export default function UserMenu() {
                                 >
                                     <div className="flex items-center gap-2">
                                         {notificationsEnabled ? (
-                                            <Bell className="h-4 w-4 text-green-600" />
+                                            <Bell className="h-4 w-4 text-[#FB732F]" />
                                         ) : (
                                             <BellOff className="h-4 w-4 text-gray-400" />
                                         )}
                                         <span className="text-gray-700">Notificaciones</span>
                                     </div>
-                                    <span className={`text-xs font-medium ${notificationsEnabled ? 'text-green-600' : 'text-gray-400'}`}>
+                                    <span className={`text-xs font-medium ${notificationsEnabled ? 'text-[#FB732F]' : 'text-gray-400'}`}>
                                         {loadingNotifications ? '...' : notificationsEnabled ? 'Activas' : 'Inactivas'}
                                     </span>
                                 </button>
