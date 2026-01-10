@@ -238,7 +238,7 @@ export default function DishesPage() {
                 type="number"
                 step="0.01"
                 value={formData.precio}
-                onChange={(e) => setFormData({ ...formData, precio: parseFloat(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, precio: parseFloat(e.target.value) || 0 })}
                 required
               />
             </div>
@@ -271,7 +271,7 @@ export default function DishesPage() {
                 id="orden"
                 type="number"
                 value={formData.orden}
-                onChange={(e) => setFormData({ ...formData, orden: parseInt(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, orden: parseInt(e.target.value) || 0 })}
               />
             </div>
             <div>
@@ -280,7 +280,7 @@ export default function DishesPage() {
                 id="inventario"
                 type="number"
                 value={formData.inventario}
-                onChange={(e) => setFormData({ ...formData, inventario: parseInt(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, inventario: parseInt(e.target.value) || 0 })}
               />
             </div>
             <div>
@@ -289,7 +289,7 @@ export default function DishesPage() {
                 id="stockMinimo"
                 type="number"
                 value={formData.stockMinimo}
-                onChange={(e) => setFormData({ ...formData, stockMinimo: parseInt(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, stockMinimo: parseInt(e.target.value) || 10 })}
               />
             </div>
             <Button type="submit">{editingDish ? 'Update' : 'Create'}</Button>

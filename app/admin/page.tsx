@@ -1,12 +1,11 @@
-import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
 export default function AdminPage() {
   return (
     <div className="space-y-6">
-      <AnalyticsDashboard />
-      
+
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link href="/admin/categories">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
