@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Coffee, CupSoda, Leaf, Snowflake, GlassWater, Zap, Citrus, Egg, Utensils, Sandwich, Croissant } from "lucide-react";
 import MenuCategory from "./MenuCategory";
 import OriginSection from "./OriginSection";
-// import CupSizeGuide from "./CupSizeGuide";
+import CupSizeGuide from "./CupSizeGuide";
 import MenuBottomNav from "./MenuBottomNav";
 import { useEffect, useState } from "react";
 
@@ -143,7 +143,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              {/* <CupSizeGuide /> */}
+              <CupSizeGuide />
             </motion.div>
 
             {/* Categories */}
