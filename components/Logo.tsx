@@ -10,7 +10,7 @@ const Logo = ({ className = "" }: { className?: string }) => {
     >
       <div className="relative flex items-center justify-center">
         {/* Main Text "Cero" */}
-        <h1 className="font-serif pt-4 text-[4rem] md:text-[7rem] leading-none text-black relative z-10" style={{ fontFamily: 'var(--font-abril)' }}>
+        <h1 className="font-serif pt-4 text-[4rem] md:text-[7rem] leading-none text-gray-800 relative z-10" style={{ fontFamily: 'var(--font-abril)' }}>
           Cero
         </h1>
         {/* Curved Text "Café de especialidad" */}

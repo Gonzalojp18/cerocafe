@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Coffee, CupSoda, Leaf, Snowflake, GlassWater, Zap, Citrus, Egg, Utensils, Sandwich, Croissant } from "lucide-react";
 import MenuCategory from "./MenuCategory";
 import OriginSection from "./OriginSection";
-import CupSizeGuide from "./CupSizeGuide";
+// import CupSizeGuide from "./CupSizeGuide";
 import MenuBottomNav from "./MenuBottomNav";
 import { useEffect, useState } from "react";
 
@@ -131,8 +131,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
             >
               <div className="w-12 h-[2px] bg-black/20 mx-auto mb-6" />
               <p className="text-sm text-black/80 leading-relaxed max-w-sm mx-auto font-medium">
-                Luz natural, texturas crudas y el aroma de especialidad.
-                Disfruta de la calma de nuestro jardín interior o de la energía de nuestra barra naranja.
+                UNA MANERA DIFERENTE DE HABITAR
               </p>
               <div className="w-12 h-[2px] bg-black/20 mx-auto mt-6" />
             </motion.div>
@@ -144,7 +143,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <CupSizeGuide />
+              {/* <CupSizeGuide /> */}
             </motion.div>
 
             {/* Categories */}
