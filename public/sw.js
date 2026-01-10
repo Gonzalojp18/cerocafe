@@ -78,6 +78,12 @@ self.addEventListener('push', function(event) {
 
     event.waitUntil(
       self.registration.showNotification(data.title, options)
+        .then(() => {
+          // Notificar a la página para actualizar datos
+          return self.clients.matchAll().then(clients => {
+            clients.forEach(client => client.postMessage({ type: 'notification' }))
+          })
+        })
     )
   }
 })

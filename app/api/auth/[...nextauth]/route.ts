@@ -18,7 +18,7 @@ export const authOptions: AuthOptions = {
 
                 try {
                     const client = await clientPromise
-                    const db = client.db('menu')
+                    const db = client.db('cerocafe')
                     const usersCollection = db.collection('users')
 
                     const user = await usersCollection.findOne({

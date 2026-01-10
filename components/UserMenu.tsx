@@ -10,10 +10,37 @@ export default function UserMenu() {
     const [isOpen, setIsOpen] = useState(false)
     const [notificationsEnabled, setNotificationsEnabled] = useState(false)
     const [loadingNotifications, setLoadingNotifications] = useState(false)
+    const [currentPoints, setCurrentPoints] = useState(0)
 
     useEffect(() => {
         checkNotificationStatus()
+        fetchCurrentPoints()
+
+        const handleMessage = (event: MessageEvent) => {
+            if (event.data.type === 'notification') {
+                fetchCurrentPoints()
+            }
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', handleMessage)
+            return () => navigator.serviceWorker.removeEventListener('message', handleMessage)
+        }
     }, [session])
+
+    const fetchCurrentPoints = async () => {
+        if (session?.user?.id) {
+            try {
+                const res = await fetch('/api/auth/me')
+                const data = await res.json()
+                if (res.ok) {
+                    setCurrentPoints(data.points)
+                }
+            } catch (error) {
+                console.error('Error fetching points:', error)
+            }
+        }
+    }
 
     const checkNotificationStatus = async () => {
         if ('Notification' in window && 'serviceWorker' in navigator && session?.user?.id) {
@@ -116,7 +143,7 @@ export default function UserMenu() {
             >
                 <User className="h-4 w-4" />
                 <span className="hidden md:inline">{session.user.name}</span>
-                <span className="font-bold">{session.user.points} pts</span>
+                <span className="font-bold">{currentPoints} pts</span>
             </button>
 
             {isOpen && (
@@ -138,7 +165,7 @@ export default function UserMenu() {
                         <div className="p-4 border-b border-gray-200">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-gray-600">Puntos acumulados</span>
-                                <span className="text-2xl font-bold text-[#FB732F]">{session.user.points}</span>
+                                <span className="text-2xl font-bold text-[#FB732F]">{currentPoints}</span>
                             </div>
                         </div>
 

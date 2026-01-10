@@ -8,12 +8,12 @@
     "theme_color": "#000000",
     "icons": [
         {
-            "src": "/juliete192.png",
+            "src": "/cero192.png",
             "sizes": "192x144",
             "type": "image/png"
         },
         {
-            "src": "/juliete512.png",
+            "src": "/cero512.png",
             "sizes": "512x384",
             "type": "image/png"
         }

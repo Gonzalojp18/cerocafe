@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
         // Conectar a MongoDB
         const client = await clientPromise
-        const db = client.db('menu')
+        const db = client.db('cerocafe')
         const usersCollection = db.collection('users')
 
         // Verificar si el email ya existe
