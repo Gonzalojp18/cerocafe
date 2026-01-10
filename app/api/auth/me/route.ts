@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '../[...nextauth]/route'
 import clientPromise from '@/lib/mongodbClient'
 
+import { ObjectId } from 'mongodb'
+
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
@@ -15,7 +17,7 @@ export async function GET() {
     const db = client.db('cerocafe')
     const usersCollection = db.collection('users')
 
-    const user = await usersCollection.findOne({ _id: session.user.id })
+    const user = await usersCollection.findOne({ _id: new ObjectId(session.user.id) })
 
     if (!user) {
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 })
