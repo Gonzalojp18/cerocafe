@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         }
 
         const client = await clientPromise
-        const db = client.db('menu')
+        const db = client.db('cerocafe')
         const subscriptionsCollection = db.collection('push_subscriptions')
 
         console.log('🔍 Buscando suscripción para userId:', userId)
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
         if (error.statusCode === 410) {
             console.log('🗑️ Suscripción expirada, eliminando...')
             const client = await clientPromise
-            const db = client.db('menu')
+            const db = client.db('cerocafe')
             await db.collection('push_subscriptions').deleteOne({
                 'subscription.endpoint': error.endpoint
             })
