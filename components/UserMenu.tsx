@@ -136,14 +136,14 @@ export default function UserMenu() {
     }
 
     return (
-        <div className="absolute top-4 right-4 md:top-6 md:right-16 z-50">
+        <div className="absolute top-0 right-2 md:top-2 md:right-2 z-50">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#FB732F] text-white rounded-full text-sm hover:bg-[#FB732F]/90 transition-colors"
+                className="flex items-center gap-4 px-6 py-0 bg-[#FB732F] text-white rounded-full text-xs hover:bg-[#FB732F]/90 transition-colors"
             >
-                <User className="h-4 w-4" />
+                <User className="h-4 w-4 " />
                 <span className="hidden md:inline">{session.user.name}</span>
-                <span className="font-bold">{currentPoints} pts</span>
+                <span className="font-medium">{currentPoints} pts</span>
             </button>
 
             {isOpen && (
@@ -158,20 +158,20 @@ export default function UserMenu() {
                     <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
                         <div className="p-4 border-b border-gray-200 bg-gray-50">
                             <p className="font-semibold text-gray-900">{session.user.name}</p>
-                            <p className="text-sm text-gray-600">{session.user.email}</p>
+                            <p className="text-xs text-gray-600">{session.user.email}</p>
                             <p className="text-xs text-gray-500 mt-1">DNI: {session.user.dni || 'N/A'}</p>
                         </div>
 
                         <div className="p-4 border-b border-gray-200">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Puntos acumulados</span>
-                                <span className="text-2xl font-bold text-[#FB732F]">{currentPoints}</span>
+                                <span className="text-xs text-gray-600">Puntos acumulados</span>
+                                <span className="text-lg font-bold text-[#FB732F]">{currentPoints}</span>
                             </div>
                         </div>
 
                         {/* Notificaciones */}
                         {(
-                            <div className="p-4 border-b border-gray-200">
+                            <div className="p-2 border-b border-gray-200">
                                 <button
                                     onClick={toggleNotifications}
                                     disabled={loadingNotifications}
@@ -197,7 +197,7 @@ export default function UserMenu() {
                                 signOut({ callbackUrl: '/' })
                                 setIsOpen(false)
                             }}
-                            className="w-full p-4 flex items-center gap-2 text-left text-red-600 hover:bg-red-50 transition-colors"
+                            className="w-full p-2 flex items-center gap-2 text-left text-red-600 hover:bg-red-50 transition-colors"
                         >
                             <LogOut className="h-4 w-4" />
                             Cerrar sesión

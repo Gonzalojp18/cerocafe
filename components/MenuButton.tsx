@@ -8,14 +8,12 @@ const MenuButton = ({ onClick }: MenuButtonProps) => {
   return (
     <motion.button
       onClick={onClick}
-      className="menu-button text-xl font-medium bg-[#FB732F] text-white p-4 rounded-md"
+      className="menu-button group flex items-center gap-2 text-lg md:text-xl font-light tracking-widest text-[#2a1c12] hover:opacity-70 transition-opacity"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
     >
-      Ver Menú
+      <span className="border-b border-[#2a1c12] pb-1">VER MENÚ</span>
     </motion.button>
   );
 };

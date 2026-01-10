@@ -59,7 +59,30 @@
   }
 }
 
+@layer utilities {
+  .bg-aura-gradient {
+    background-color: #f3f4f6;
+    background-image:
+      radial-gradient(at 5% 5%, #e9f5ff 0px, transparent 50%),
+      radial-gradient(at 5% 5%, #d3f5ef 0px, transparent 50%),
+      radial-gradient(at 90% 90%, #FFBB28 0px, transparent 80%),
+      radial-gradient(at 90% 90%, #FF8042 0px, transparent 80%),
+      radial-gradient(at 90% 40%, #bdbaf0 0px, transparent 50%);
+    background-size: 240% 150%;
+    animation: aura 15s ease infinite;
+  }
 
+  @keyframes aura {
+    0% {
+      background-position: 0% 50%;
+    }
 
+    50% {
+      background-position: 100% 50%;
+    }
 
-/* const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']; */
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
