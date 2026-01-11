@@ -43,6 +43,21 @@ export default function AdminPage() {
             </CardContent>
           </Card>
         </Link>
+
+
+                {/* NUEVA TARJETA DE ESTADÍSTICAS */}
+        <Link href="/admin/stats">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-[#FB732F] border-2">
+            <CardHeader>
+              <CardTitle>Statistics</CardTitle>
+              <CardDescription>View business metrics and insights</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600">Analyze customer data, points, and staff performance</p>
+            </CardContent>
+          </Card>
+        </Link>
+
       </div>
     </div>
   );
