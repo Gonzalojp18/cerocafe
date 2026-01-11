@@ -29,6 +29,20 @@ export default function AdminPage() {
             </CardContent>
           </Card>
         </Link>
+
+
+                {/* NUEVA TARJETA DE USUARIOS */}
+        <Link href="/admin/users">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Users</CardTitle>
+              <CardDescription>Manage system users and roles</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600">Create staff accounts and manage user roles</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );
