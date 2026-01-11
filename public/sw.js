@@ -7,11 +7,11 @@ const CACHE_NAME = 'cero-v3'
 const urlsToCache = ['/']
 
 // Instalación del Service Worker
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   console.log('[SW] Instalando Service Worker...')
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(function(cache) {
+      .then(function (cache) {
         console.log('[SW] Archivos cacheados')
         return cache.addAll(urlsToCache)
       })
@@ -20,12 +20,12 @@ self.addEventListener('install', function(event) {
 })
 
 // Activación del Service Worker
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   console.log('[SW] Activando Service Worker...')
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then(function (cacheNames) {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
+        cacheNames.map(function (cacheName) {
           if (cacheName !== CACHE_NAME) {
             console.log('[SW] Eliminando cache antiguo:', cacheName)
             return caches.delete(cacheName)
@@ -38,32 +38,38 @@ self.addEventListener('activate', function(event) {
 })
 
 // Fetch - estrategia Network First
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
+  // CRÍTICO: Solo cachear peticiones GET que NO sean a /api/
+  if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
+    // Dejar pasar sin cachear
+    return
+  }
+
   event.respondWith(
     fetch(event.request)
-      .then(function(response) {
+      .then(function (response) {
         if (response && response.status === 200) {
           const responseToCache = response.clone()
           caches.open(CACHE_NAME)
-            .then(function(cache) {
+            .then(function (cache) {
               cache.put(event.request, responseToCache)
             })
         }
         return response
       })
-      .catch(function() {
+      .catch(function () {
         return caches.match(event.request)
       })
   )
 })
 
 // ====== NOTIFICACIONES LOCALES ======
-self.addEventListener('message', function(event) {
+self.addEventListener('message', function (event) {
   console.log('[SW] Mensaje recibido:', event.data)
-  
+
   if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
     const { title, body } = event.data
-    
+
     const options = {
       body: body,
       vibrate: [200, 100, 200],
@@ -84,13 +90,13 @@ self.addEventListener('message', function(event) {
 })
 
 // Manejar clic en la notificación
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   console.log('[SW] Click en notificación')
   event.notification.close()
-  
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then(function(clientList) {
+      .then(function (clientList) {
         for (let i = 0; i < clientList.length; i++) {
           const client = clientList[i]
           if ('focus' in client) {
@@ -105,14 +111,14 @@ self.addEventListener('notificationclick', function(event) {
 })
 
 // ====== PUSH NOTIFICATIONS (desde servidor) ======
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
   console.log('[SW] 📬 Push recibido desde servidor')
-  
+
   let notificationData = {
     title: '🔔 Nueva notificación',
     body: 'Tienes una actualización'
   }
-  
+
   if (event.data) {
     try {
       notificationData = event.data.json()
@@ -121,7 +127,7 @@ self.addEventListener('push', function(event) {
       console.error('[SW] ❌ Error al parsear datos del push:', e)
     }
   }
-  
+
   const options = {
     body: notificationData.body,
     vibrate: [200, 100, 200, 100, 200],

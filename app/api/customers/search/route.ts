@@ -19,12 +19,15 @@ export async function GET(request: Request) {
         const usersCollection = db.collection('users')
 
         // Buscar cliente por DNI
+        console.log('🔍 Buscando cliente con DNI:', dni)
+
         const customer = await usersCollection.findOne(
             { dni },
             { projection: { password: 0 } } // Excluir la contraseña
         )
 
         if (!customer) {
+            console.log('❌ Cliente no encontrado')
             return NextResponse.json(
                 { error: 'Cliente no encontrado' },
                 { status: 404 }
@@ -39,6 +42,12 @@ export async function GET(request: Request) {
                 email: customer.email,
                 points: customer.points || 0,
                 role: customer.role
+            }
+        }, {
+            headers: {
+                'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             }
         })
     } catch (error) {

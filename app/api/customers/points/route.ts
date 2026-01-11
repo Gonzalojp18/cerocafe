@@ -1,8 +1,20 @@
 import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import clientPromise from '@/lib/mongodbClient'
 
 export async function POST(request: Request) {
     try {
+        // Obtener sesión para saber quién hizo la operación
+        const session = await getServerSession(authOptions)
+
+        if (!session) {
+            return NextResponse.json(
+                { error: 'No autorizado' },
+                { status: 401 }
+            )
+        }
+
         const { dni, points, action } = await request.json()
 
         // Validaciones
@@ -31,6 +43,7 @@ export async function POST(request: Request) {
         const client = await clientPromise
         const db = client.db('cerocafe')
         const usersCollection = db.collection('users')
+        const transactionsCollection = db.collection('points_transactions')
 
         // Buscar el cliente
         const customer = await usersCollection.findOne({ dni })
@@ -60,10 +73,50 @@ export async function POST(request: Request) {
         }
 
         // Actualizar puntos en la base de datos
-        await usersCollection.updateOne(
+        console.log('🔄 Actualizando puntos en DB:', {
+            dni,
+            currentPoints,
+            newPoints,
+            action
+        })
+
+        const updateResult = await usersCollection.updateOne(
             { dni },
             { $set: { points: newPoints } }
         )
+
+        console.log('✅ Resultado de actualización:', {
+            matchedCount: updateResult.matchedCount,
+            modifiedCount: updateResult.modifiedCount
+        })
+
+        // Verificar que se actualizó correctamente
+        const updatedCustomer = await usersCollection.findOne({ dni })
+        console.log('🔍 Usuario después de actualizar:', {
+            dni: updatedCustomer?.dni,
+            points: updatedCustomer?.points,
+            pointsType: typeof updatedCustomer?.points
+        })
+
+        // Registrar la transacción
+        const transaction = {
+            userId: customer._id.toString(),
+            customerId: customer._id,
+            customerName: customer.name,
+            customerDni: customer.dni,
+            staffId: session.user.id,
+            staffName: session.user.name,
+            staffRole: session.user.role,
+            points: points,
+            action: action,
+            previousBalance: currentPoints,
+            newBalance: newPoints,
+            createdAt: new Date()
+        }
+
+        await transactionsCollection.insertOne(transaction)
+
+        console.log('💾 Transacción guardada exitosamente')
 
         return NextResponse.json({
             message: 'Puntos actualizados exitosamente',
