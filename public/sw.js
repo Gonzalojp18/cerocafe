@@ -12,21 +12,21 @@ const urlsToCache = [
 ]
 
 // Instalación del Service Worker
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(function(cache) {
+      .then(function (cache) {
         return cache.addAll(urlsToCache)
       })
   )
 })
 
 // Activación del Service Worker
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then(function (cacheNames) {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
+        cacheNames.map(function (cacheName) {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName)
           }
@@ -37,21 +37,27 @@ self.addEventListener('activate', function(event) {
 })
 
 // Fetch - estrategia Network First
-self.addEventListener('fetch', function(event) {
+// Fetch - estrategia Network First
+self.addEventListener('fetch', function (event) {
+  // Excluir API y peticiones no-GET del caché
+  if (event.request.url.includes('/api/') || event.request.method !== 'GET') {
+    return
+  }
+
   event.respondWith(
     fetch(event.request)
-      .then(function(response) {
+      .then(function (response) {
         // Si la respuesta es válida, clonarla y guardarla en cache
         if (response && response.status === 200) {
           const responseToCache = response.clone()
           caches.open(CACHE_NAME)
-            .then(function(cache) {
+            .then(function (cache) {
               cache.put(event.request, responseToCache)
             })
         }
         return response
       })
-      .catch(function() {
+      .catch(function () {
         // Si falla el fetch, buscar en cache
         return caches.match(event.request)
       })
@@ -61,10 +67,10 @@ self.addEventListener('fetch', function(event) {
 // ====== NOTIFICACIONES PUSH ======
 
 // Escuchar eventos de notificaciones push
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
   if (event.data) {
     const data = event.data.json()
-    
+
     const options = {
       body: data.body,
       icon: data.icon || '/cero192.png',
@@ -89,9 +95,9 @@ self.addEventListener('push', function(event) {
 })
 
 // Manejar clic en la notificación
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   event.notification.close()
-  
+
   event.waitUntil(
     clients.openWindow('/')
   )

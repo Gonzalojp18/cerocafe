@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import clientPromise from "@/lib/mongodbClient"
 import bcrypt from "bcryptjs"
 
+console.log('🚀 Cargas de ruta: /api/auth/[...nextauth]')
+
 export const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
