@@ -5,7 +5,15 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export default function RegisterForm() {
+interface RegisterFormProps {
+    preventAutoLogin?: boolean
+    redirectOnSuccess?: string
+}
+
+export default function RegisterForm({
+    preventAutoLogin = false,
+    redirectOnSuccess = '/'
+}: RegisterFormProps) {
     const [name, setName] = useState('')
     const [dni, setDni] = useState('')
     const [email, setEmail] = useState('')
@@ -38,6 +46,11 @@ export default function RegisterForm() {
             if (!res.ok) {
                 setError(data.error || 'Error al registrarse')
             } else {
+                if (preventAutoLogin) {
+                    router.push(redirectOnSuccess)
+                    return
+                }
+
                 // Auto-login después del registro
                 const loginResult = await signIn('credentials', {
                     email,
@@ -48,13 +61,13 @@ export default function RegisterForm() {
                 if (loginResult?.error) {
                     router.push('/login?registered=true')
                 } else {
-                    router.push('/')  // Redirige al menú
+                    router.push(redirectOnSuccess)
                 }
-
-
-
-
             }
+
+
+
+
         } catch (error) {
             setError('Ocurrió un error. Intenta nuevamente.')
         } finally {

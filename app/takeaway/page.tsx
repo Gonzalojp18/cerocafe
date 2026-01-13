@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useCart } from '@/app/contexts/CartContext'
-import { ShoppingCart, Search, Star, Flame } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { useSession } from 'next-auth/react'
+import { ShoppingCart, Search, Star, Flame, LogIn } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -11,6 +12,15 @@ import Image from 'next/image'
 import CartDrawer from '@/components/CartDrawer'
 import { AnimatePresence } from 'framer-motion'
 import LoadingTransition from '@/components/LoadingTransition'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import RegisterForm from '@/components/RegisterForm'
+import Link from 'next/link'
 
 type Dish = {
     _id: string
@@ -33,12 +43,16 @@ type CategoryGroup = {
 }
 
 export default function TakeAwayPage() {
+    const { data: session, status } = useSession()
     const { addItem, itemCount, total } = useCart()
     const [recommended, setRecommended] = useState<Dish[]>([])
     const [categories, setCategories] = useState<CategoryGroup[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
     const [isCartOpen, setIsCartOpen] = useState(false)
+
+    // Solo se debe mostrar el contenido si el usuario está autenticado y terminó de cargar
+    const isPageContentVisible = status === 'authenticated' && !loading
 
     useEffect(() => {
         fetchDishes()
@@ -91,7 +105,41 @@ export default function TakeAwayPage() {
                 {loading && <LoadingTransition />}
             </AnimatePresence>
 
-            {!loading && (
+            {/* Modal de Registro Forzado si no está logueado y no está cargando */}
+            {!loading && status === 'unauthenticated' && (
+                <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <Dialog open={true}>
+                        <DialogContent className="max-w-md w-full sm:rounded-2xl border-none shadow-2xl bg-white/95 backdrop-blur-xl">
+                            <DialogHeader>
+                                <DialogTitle className="text-2xl font-bold text-center text-[#FB732F]">
+                                    ¡Bienvenido a Cero!
+                                </DialogTitle>
+                                <DialogDescription className="text-center text-gray-500">
+                                    Para realizar tu pedido take away, necesitamos que te registres o inicies sesión.
+                                </DialogDescription>
+                            </DialogHeader>
+
+                            <RegisterForm
+                                preventAutoLogin={true}
+                                redirectOnSuccess="/login?callbackUrl=/takeaway"
+                            />
+
+                            <div className="mt-4 text-center border-t pt-4">
+                                <p className="text-sm text-gray-500 mb-2">¿Ya tienes cuenta?</p>
+                                <Link
+                                    href="/login?callbackUrl=/takeaway"
+                                    className="inline-flex items-center text-[#FB732F] hover:underline font-medium"
+                                >
+                                    <LogIn className="w-4 h-4 mr-2" />
+                                    Iniciar Sesión
+                                </Link>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            )}
+
+            {isPageContentVisible && (
                 <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
                     {/* Header con carrito */}
                     <div className="sticky top-0 z-50 bg-white border-b shadow-sm">

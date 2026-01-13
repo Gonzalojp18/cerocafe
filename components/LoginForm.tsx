@@ -2,7 +2,7 @@
 
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 export default function LoginForm() {
@@ -10,7 +10,10 @@ export default function LoginForm() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get('callbackUrl') || '/'
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -27,7 +30,7 @@ export default function LoginForm() {
             if (result?.error) {
                 setError('Email o contraseña incorrectos')
             } else {
-                router.push('/')
+                router.push(callbackUrl)
             }
         } catch (error) {
             setError('Ocurrió un error. Intenta nuevamente.')

@@ -7,7 +7,7 @@ import OriginSection from "./OriginSection";
 import CupSizeGuide from "./CupSizeGuide";
 import MenuBottomNav from "./MenuBottomNav";
 import FeaturedDishes from "./FeaturedDishes";
-import LoadingTransition from "../LoadingTransition";
+// import LoadingTransition from "../LoadingTransition";
 import UserMenu from "../UserMenu";
 import { useState, useEffect } from "react";
 
@@ -91,7 +91,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
   if (loading) {
     return (
       <AnimatePresence>
-        {isOpen && <LoadingTransition />}
+        <div>cargando nuestra experiencias</div>
       </AnimatePresence>
     );
   }
