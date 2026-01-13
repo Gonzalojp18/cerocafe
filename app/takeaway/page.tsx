@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useCart } from '@/app/contexts/CartContext'
 import { useSession } from 'next-auth/react'
-import { ShoppingCart, Search, Star, Flame, LogIn } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ShoppingCart, Search, LogIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import Image from 'next/image'
 import CartDrawer from '@/components/CartDrawer'
 import { AnimatePresence } from 'framer-motion'
 import LoadingTransition from '@/components/LoadingTransition'
@@ -21,6 +19,8 @@ import {
 } from "@/components/ui/dialog"
 import RegisterForm from '@/components/RegisterForm'
 import Link from 'next/link'
+import RecommendedCarousel from '@/components/takeaway/RecommendedCarousel'
+import CategorySection from '@/components/takeaway/CategorySection'
 
 type Dish = {
     _id: string
@@ -51,7 +51,6 @@ export default function TakeAwayPage() {
     const [searchQuery, setSearchQuery] = useState('')
     const [isCartOpen, setIsCartOpen] = useState(false)
 
-    // Solo se debe mostrar el contenido si el usuario está autenticado y terminó de cargar
     const isPageContentVisible = status === 'authenticated' && !loading
 
     useEffect(() => {
@@ -91,21 +90,13 @@ export default function TakeAwayPage() {
         )
     })).filter(catGroup => catGroup.dishes.length > 0)
 
-    // if (loading) {
-    //     return (
-    //         <div className="flex items-center justify-center min-h-screen">
-    //             <p className="text-lg">Cargando menú...</p>
-    //         </div>
-    //     )
-    // }
-
     return (
         <>
             <AnimatePresence>
                 {loading && <LoadingTransition />}
             </AnimatePresence>
 
-            {/* Modal de Registro Forzado si no está logueado y no está cargando */}
+            {/* Modal de Registro Forzado */}
             {!loading && status === 'unauthenticated' && (
                 <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
                     <Dialog open={true}>
@@ -178,7 +169,7 @@ export default function TakeAwayPage() {
                             </div>
                         )}
 
-                        {/* Hero Section con búsqueda */}
+                        {/* Buscador */}
                         <div className="mb-8">
                             <div className="relative">
                                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -193,124 +184,18 @@ export default function TakeAwayPage() {
                         </div>
 
                         {/* Carrusel de Recomendados */}
-                        {!searchQuery && recommended.length > 0 && (
-                            <div className="mb-12">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <Flame className="h-6 w-6 text-[#FB732F]" />
-                                    <h2 className="text-2xl font-bold">Recomendados del día</h2>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {recommended.map(dish => (
-                                        <Card key={dish._id} className="hover:shadow-xl transition-shadow cursor-pointer overflow-hidden group">
-                                            <div className="relative h-48 bg-gray-200">
-                                                {dish.image ? (
-                                                    <Image
-                                                        src={dish.image}
-                                                        alt={dish.name}
-                                                        fill
-                                                        className="object-cover group-hover:scale-105 transition-transform"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center">
-                                                        <span className="text-4xl">🍽️</span>
-                                                    </div>
-                                                )}
-                                                <Badge className="absolute top-3 right-3 bg-[#FB732F]">
-                                                    <Star className="h-3 w-3 mr-1" />
-                                                    Popular
-                                                </Badge>
-                                            </div>
-
-                                            <CardContent className="p-4">
-                                                <h3 className="font-bold text-lg mb-1">{dish.name}</h3>
-                                                <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                                                    {dish.description}
-                                                </p>
-
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <p className="text-2xl font-bold text-[#FB732F]">
-                                                            ${dish.price}
-                                                        </p>
-                                                        {dish.basePrice !== dish.price && (
-                                                            <p className="text-xs text-gray-400 line-through">
-                                                                En mesa: ${dish.basePrice}
-                                                            </p>
-                                                        )}
-                                                    </div>
-
-                                                    <Button
-                                                        onClick={() => handleAddToCart(dish)}
-                                                        className="bg-[#FB732F] hover:bg-[#FB732F]/90"
-                                                    >
-                                                        Agregar
-                                                    </Button>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
-                                </div>
-                            </div>
+                        {!searchQuery && (
+                            <RecommendedCarousel
+                                dishes={recommended}
+                                onAddToCart={handleAddToCart}
+                            />
                         )}
 
                         {/* Categorías con platos */}
-                        <div className="space-y-12">
-                            {filteredCategories.map(catGroup => (
-                                <div key={catGroup.category._id}>
-                                    <div className="mb-6">
-                                        <h2 className="text-3xl font-bold mb-2">{catGroup.category.name}</h2>
-                                        {catGroup.category.description && (
-                                            <p className="text-gray-600">{catGroup.category.description}</p>
-                                        )}
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {catGroup.dishes.map(dish => (
-                                            <Card key={dish._id} className="hover:shadow-lg transition-shadow overflow-hidden group">
-                                                <div className="relative h-40 bg-gray-100">
-                                                    {dish.image ? (
-                                                        <Image
-                                                            src={dish.image}
-                                                            alt={dish.name}
-                                                            fill
-                                                            className="object-cover group-hover:scale-105 transition-transform"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-full h-full flex items-center justify-center">
-                                                            <span className="text-3xl">🍽️</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <CardContent className="p-4">
-                                                    <h3 className="font-semibold text-lg mb-1">{dish.name}</h3>
-                                                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                                                        {dish.description}
-                                                    </p>
-
-                                                    <div className="flex items-center justify-between">
-                                                        <div>
-                                                            <p className="text-xl font-bold text-[#FB732F]">
-                                                                ${dish.price}
-                                                            </p>
-                                                        </div>
-
-                                                        <Button
-                                                            onClick={() => handleAddToCart(dish)}
-                                                            size="sm"
-                                                            className="bg-[#FB732F] hover:bg-[#FB732F]/90"
-                                                        >
-                                                            Agregar
-                                                        </Button>
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        <CategorySection
+                            categories={filteredCategories}
+                            onAddToCart={handleAddToCart}
+                        />
 
                         {/* Sin resultados */}
                         {searchQuery && filteredCategories.length === 0 && (
