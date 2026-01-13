@@ -11,6 +11,7 @@ type Dish = {
     basePrice: number
     price: number
     image?: string
+    category: string
     popularity: number
 }
 

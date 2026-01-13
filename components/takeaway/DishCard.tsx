@@ -14,6 +14,7 @@ type DishCardProps = {
         basePrice: number
         price: number
         image?: string
+        category?: string
         popularity?: number
     }
     onAddToCart: (dish: any) => void
