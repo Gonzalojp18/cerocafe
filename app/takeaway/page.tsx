@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import Image from 'next/image'
 import CartDrawer from '@/components/CartDrawer'
+import { AnimatePresence } from 'framer-motion'
+import LoadingTransition from '@/components/LoadingTransition'
 
 type Dish = {
     _id: string
@@ -75,193 +77,201 @@ export default function TakeAwayPage() {
         )
     })).filter(catGroup => catGroup.dishes.length > 0)
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <p className="text-lg">Cargando menú...</p>
-            </div>
-        )
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="flex items-center justify-center min-h-screen">
+    //             <p className="text-lg">Cargando menú...</p>
+    //         </div>
+    //     )
+    // }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-            {/* Header con carrito */}
-            <div className="sticky top-0 z-50 bg-white border-b shadow-sm">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-[#FB732F]">Cero Café</h1>
-                            <p className="text-sm text-gray-500">Take Away</p>
-                        </div>
+        <>
+            <AnimatePresence>
+                {loading && <LoadingTransition />}
+            </AnimatePresence>
 
-                        {/* Carrito flotante */}
-                        <Button
-                            className="relative bg-[#FB732F] hover:bg-[#FB732F]/90"
-                            size="lg"
-                            onClick={() => setIsCartOpen(true)}
-                        >
-                            <ShoppingCart className="h-5 w-5 mr-2" />
-                            <span className="font-semibold">${total}</span>
-                            {itemCount > 0 && (
-                                <Badge className="absolute -top-2 -right-2 bg-red-500">
-                                    {itemCount}
-                                </Badge>
-                            )}
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            {!loading && (
+                <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+                    {/* Header con carrito */}
+                    <div className="sticky top-0 z-50 bg-white border-b shadow-sm">
+                        <div className="container mx-auto px-4 py-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h1 className="text-2xl font-bold text-[#FB732F]">Cero Café</h1>
+                                    <p className="text-sm text-gray-500">Take Away</p>
+                                </div>
 
-            <div className="container mx-auto px-4 py-8">
-                {/* Hero Section con búsqueda */}
-                <div className="mb-8">
-                    <div className="relative">
-                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                        <Input
-                            type="text"
-                            placeholder="Buscar platos..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-12 py-6 text-lg"
-                        />
-                    </div>
-                </div>
-
-                {/* Carrusel de Recomendados */}
-                {!searchQuery && recommended.length > 0 && (
-                    <div className="mb-12">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Flame className="h-6 w-6 text-[#FB732F]" />
-                            <h2 className="text-2xl font-bold">Recomendados del día</h2>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {recommended.map(dish => (
-                                <Card key={dish._id} className="hover:shadow-xl transition-shadow cursor-pointer overflow-hidden group">
-                                    <div className="relative h-48 bg-gray-200">
-                                        {dish.image ? (
-                                            <Image
-                                                src={dish.image}
-                                                alt={dish.name}
-                                                fill
-                                                className="object-cover group-hover:scale-105 transition-transform"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
-                                                <span className="text-4xl">🍽️</span>
-                                            </div>
-                                        )}
-                                        <Badge className="absolute top-3 right-3 bg-[#FB732F]">
-                                            <Star className="h-3 w-3 mr-1" />
-                                            Popular
+                                {/* Carrito flotante */}
+                                <Button
+                                    className="relative bg-[#FB732F] hover:bg-[#FB732F]/90"
+                                    size="lg"
+                                    onClick={() => setIsCartOpen(true)}
+                                >
+                                    <ShoppingCart className="h-5 w-5 mr-2" />
+                                    <span className="font-semibold">${total}</span>
+                                    {itemCount > 0 && (
+                                        <Badge className="absolute -top-2 -right-2 bg-red-500">
+                                            {itemCount}
                                         </Badge>
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="container mx-auto px-4 py-8">
+                        {/* Hero Section con búsqueda */}
+                        <div className="mb-8">
+                            <div className="relative">
+                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                                <Input
+                                    type="text"
+                                    placeholder="Buscar platos..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="pl-12 py-6 text-lg"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Carrusel de Recomendados */}
+                        {!searchQuery && recommended.length > 0 && (
+                            <div className="mb-12">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <Flame className="h-6 w-6 text-[#FB732F]" />
+                                    <h2 className="text-2xl font-bold">Recomendados del día</h2>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {recommended.map(dish => (
+                                        <Card key={dish._id} className="hover:shadow-xl transition-shadow cursor-pointer overflow-hidden group">
+                                            <div className="relative h-48 bg-gray-200">
+                                                {dish.image ? (
+                                                    <Image
+                                                        src={dish.image}
+                                                        alt={dish.name}
+                                                        fill
+                                                        className="object-cover group-hover:scale-105 transition-transform"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <span className="text-4xl">🍽️</span>
+                                                    </div>
+                                                )}
+                                                <Badge className="absolute top-3 right-3 bg-[#FB732F]">
+                                                    <Star className="h-3 w-3 mr-1" />
+                                                    Popular
+                                                </Badge>
+                                            </div>
+
+                                            <CardContent className="p-4">
+                                                <h3 className="font-bold text-lg mb-1">{dish.name}</h3>
+                                                <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                                                    {dish.description}
+                                                </p>
+
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <p className="text-2xl font-bold text-[#FB732F]">
+                                                            ${dish.price}
+                                                        </p>
+                                                        {dish.basePrice !== dish.price && (
+                                                            <p className="text-xs text-gray-400 line-through">
+                                                                En mesa: ${dish.basePrice}
+                                                            </p>
+                                                        )}
+                                                    </div>
+
+                                                    <Button
+                                                        onClick={() => handleAddToCart(dish)}
+                                                        className="bg-[#FB732F] hover:bg-[#FB732F]/90"
+                                                    >
+                                                        Agregar
+                                                    </Button>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Categorías con platos */}
+                        <div className="space-y-12">
+                            {filteredCategories.map(catGroup => (
+                                <div key={catGroup.category._id}>
+                                    <div className="mb-6">
+                                        <h2 className="text-3xl font-bold mb-2">{catGroup.category.name}</h2>
+                                        {catGroup.category.description && (
+                                            <p className="text-gray-600">{catGroup.category.description}</p>
+                                        )}
                                     </div>
 
-                                    <CardContent className="p-4">
-                                        <h3 className="font-bold text-lg mb-1">{dish.name}</h3>
-                                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                                            {dish.description}
-                                        </p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {catGroup.dishes.map(dish => (
+                                            <Card key={dish._id} className="hover:shadow-lg transition-shadow overflow-hidden group">
+                                                <div className="relative h-40 bg-gray-100">
+                                                    {dish.image ? (
+                                                        <Image
+                                                            src={dish.image}
+                                                            alt={dish.name}
+                                                            fill
+                                                            className="object-cover group-hover:scale-105 transition-transform"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center">
+                                                            <span className="text-3xl">🍽️</span>
+                                                        </div>
+                                                    )}
+                                                </div>
 
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <p className="text-2xl font-bold text-[#FB732F]">
-                                                    ${dish.price}
-                                                </p>
-                                                {dish.basePrice !== dish.price && (
-                                                    <p className="text-xs text-gray-400 line-through">
-                                                        En mesa: ${dish.basePrice}
+                                                <CardContent className="p-4">
+                                                    <h3 className="font-semibold text-lg mb-1">{dish.name}</h3>
+                                                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                                                        {dish.description}
                                                     </p>
-                                                )}
-                                            </div>
 
-                                            <Button
-                                                onClick={() => handleAddToCart(dish)}
-                                                className="bg-[#FB732F] hover:bg-[#FB732F]/90"
-                                            >
-                                                Agregar
-                                            </Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <p className="text-xl font-bold text-[#FB732F]">
+                                                                ${dish.price}
+                                                            </p>
+                                                        </div>
+
+                                                        <Button
+                                                            onClick={() => handleAddToCart(dish)}
+                                                            size="sm"
+                                                            className="bg-[#FB732F] hover:bg-[#FB732F]/90"
+                                                        >
+                                                            Agregar
+                                                        </Button>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                </div>
                             ))}
                         </div>
+
+                        {/* Sin resultados */}
+                        {searchQuery && filteredCategories.length === 0 && (
+                            <div className="text-center py-12">
+                                <p className="text-xl text-gray-500">
+                                    No encontramos platos que coincidan con "{searchQuery}"
+                                </p>
+                            </div>
+                        )}
                     </div>
-                )}
 
-                {/* Categorías con platos */}
-                <div className="space-y-12">
-                    {filteredCategories.map(catGroup => (
-                        <div key={catGroup.category._id}>
-                            <div className="mb-6">
-                                <h2 className="text-3xl font-bold mb-2">{catGroup.category.name}</h2>
-                                {catGroup.category.description && (
-                                    <p className="text-gray-600">{catGroup.category.description}</p>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {catGroup.dishes.map(dish => (
-                                    <Card key={dish._id} className="hover:shadow-lg transition-shadow overflow-hidden group">
-                                        <div className="relative h-40 bg-gray-100">
-                                            {dish.image ? (
-                                                <Image
-                                                    src={dish.image}
-                                                    alt={dish.name}
-                                                    fill
-                                                    className="object-cover group-hover:scale-105 transition-transform"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center">
-                                                    <span className="text-3xl">🍽️</span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <CardContent className="p-4">
-                                            <h3 className="font-semibold text-lg mb-1">{dish.name}</h3>
-                                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                                                {dish.description}
-                                            </p>
-
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <p className="text-xl font-bold text-[#FB732F]">
-                                                        ${dish.price}
-                                                    </p>
-                                                </div>
-
-                                                <Button
-                                                    onClick={() => handleAddToCart(dish)}
-                                                    size="sm"
-                                                    className="bg-[#FB732F] hover:bg-[#FB732F]/90"
-                                                >
-                                                    Agregar
-                                                </Button>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+                    {/* Cart Drawer */}
+                    <CartDrawer
+                        isOpen={isCartOpen}
+                        onClose={() => setIsCartOpen(false)}
+                    />
                 </div>
-
-                {/* Sin resultados */}
-                {searchQuery && filteredCategories.length === 0 && (
-                    <div className="text-center py-12">
-                        <p className="text-xl text-gray-500">
-                            No encontramos platos que coincidan con "{searchQuery}"
-                        </p>
-                    </div>
-                )}
-            </div>
-
-            {/* Cart Drawer */}
-            <CartDrawer
-                isOpen={isCartOpen}
-                onClose={() => setIsCartOpen(false)}
-            />
-        </div>
+            )}
+        </>
     )
 }
