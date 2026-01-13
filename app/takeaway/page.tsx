@@ -169,6 +169,15 @@ export default function TakeAwayPage() {
                     </div>
 
                     <div className="container mx-auto px-4 py-8">
+                        {/* Saludo al Usuario */}
+                        {session?.user?.name && (
+                            <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
+                                <h2 className="text-xl md:text-2xl font-medium text-gray-800">
+                                    ¡Hola, <span className="text-[#FB732F] font-bold capitalize">{session.user.name}</span>!
+                                </h2>
+                            </div>
+                        )}
+
                         {/* Hero Section con búsqueda */}
                         <div className="mb-8">
                             <div className="relative">

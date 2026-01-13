@@ -15,7 +15,7 @@ export default function LoginPage() {
                         Accede a tu cuenta de Juliette
                     </p>
                 </div>
-                <LoginForm />ssss
+                <LoginForm />
             </div>
         </div>
     )

@@ -91,7 +91,6 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
   if (loading) {
     return (
       <AnimatePresence>
-        <div>cargando nuestra experiencias</div>
       </AnimatePresence>
     );
   }
