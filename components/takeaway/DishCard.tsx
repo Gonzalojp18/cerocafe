@@ -17,7 +17,7 @@ type DishCardProps = {
         popularity?: number
     }
     onAddToCart: (dish: any) => void
-    variant?: 'recommended' | 'default'
+    variant?: 'recommended' | 'default' | 'minimal-compact'
 }
 
 export default function DishCard({ dish, onAddToCart, variant = 'default' }: DishCardProps) {

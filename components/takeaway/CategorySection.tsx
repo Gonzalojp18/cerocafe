@@ -33,7 +33,7 @@ export default function CategorySection({ categories, onAddToCart }: CategorySec
     return (
         <div className="space-y-12">
             {categories.map(catGroup => (
-                <div key={catGroup.category._id}>
+                <div key={catGroup.category._id} id={`category-${catGroup.category.name}`} className="scroll-mt-28">
                     {/* Header de categoría */}
                     <div className="mb-6">
                         <h2 className="text-3xl font-bold mb-2">{catGroup.category.name}</h2>

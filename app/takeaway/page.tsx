@@ -21,6 +21,7 @@ import RegisterForm from '@/components/RegisterForm'
 import Link from 'next/link'
 import RecommendedCarousel from '@/components/takeaway/RecommendedCarousel'
 import CategorySection from '@/components/takeaway/CategorySection'
+import CategoryNav from '@/components/takeaway/CategoryNav'
 
 type Dish = {
     _id: string
@@ -189,6 +190,11 @@ export default function TakeAwayPage() {
                                 dishes={recommended}
                                 onAddToCart={handleAddToCart}
                             />
+                        )}
+
+                        {/* Navegación de Categorías */}
+                        {!searchQuery && (
+                            <CategoryNav categories={filteredCategories} />
                         )}
 
                         {/* Categorías con platos */}
