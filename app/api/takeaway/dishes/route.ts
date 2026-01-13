@@ -59,7 +59,8 @@ export async function GET(request: Request) {
             category: {
                 _id: category._id.toString(),
                 name: category.nombre,
-                description: category.descripcion || ''
+                description: category.descripcion || '',
+                template: category.template || 'grid'  // ← NUEVA LÍNEA
             },
             dishes: dishes
                 .filter(dish => dish.categoria === category.nombre)
