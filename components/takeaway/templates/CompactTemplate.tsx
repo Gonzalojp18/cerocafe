@@ -67,17 +67,17 @@ function CompactDishCard({ dish, onAddToCart }: { dish: Dish; onAddToCart: (dish
                         {dish.category}
                     </Badge>
 
-                    {/* Botón agregar (aparece en hover) */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    {/* Botón agregar (siempre visible) */}
+                    <div className="absolute top-2 right-2 md:top-auto md:bottom-2 md:right-2 z-20">
                         <Button
                             onClick={(e) => {
                                 e.stopPropagation()
                                 onAddToCart(dish)
                             }}
                             size="sm"
-                            className="bg-[#FB732F] hover:bg-[#FB732F]/90 rounded-full w-10 h-10 p-0"
+                            className="bg-[#FB732F] hover:bg-[#FB732F]/90 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 shadow-lg"
                         >
-                            <Plus className="h-5 w-5" />
+                            <Plus className="h-4 w-4 md:h-5 md:w-5" />
                         </Button>
                     </div>
                 </div>
@@ -98,15 +98,7 @@ function CompactDishCard({ dish, onAddToCart }: { dish: Dish; onAddToCart: (dish
                         </p>
 
                         {/* Botón agregar visible siempre en móvil */}
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onAddToCart(dish)
-                            }}
-                            className="md:hidden w-8 h-8 rounded-full bg-[#FB732F] hover:bg-[#FB732F]/90 flex items-center justify-center transition-colors"
-                        >
-                            <Plus className="h-4 w-4 text-white" />
-                        </button>
+
                     </div>
                 </div>
             </CardContent>

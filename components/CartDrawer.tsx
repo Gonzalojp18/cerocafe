@@ -51,53 +51,62 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             {items.map(item => (
                                 <Card key={item.dishId} className="overflow-hidden">
                                     <CardContent className="p-4">
-                                        <div className="flex gap-4">
-                                            <div className="relative w-20 h-20 bg-gray-100 rounded flex-shrink-0">
+                                        <div className="flex gap-3">
+                                            {/* Imagen del producto */}
+                                            <div className="relative w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
                                                 {item.image ? (
                                                     <Image
                                                         src={item.image}
                                                         alt={item.name}
                                                         fill
-                                                        className="object-cover rounded"
+                                                        className="object-cover"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center">
+                                                    <div className="w-full h-full flex items-center justify-center bg-gray-50">
                                                         <span className="text-2xl">🍽️</span>
                                                     </div>
                                                 )}
                                             </div>
 
-                                            <div className="flex-1">
-                                                <h3 className="font-semibold">{item.name}</h3>
-                                                <p className="text-[#FB732F] font-bold">${item.price}</p>
-                                            </div>
+                                            {/* Detalles y Controles */}
+                                            <div className="flex-1 flex flex-col justify-between min-w-0">
+                                                <div className="flex justify-between items-start gap-2">
+                                                    <h3 className="font-semibold text-sm line-clamp-2 leading-tight">
+                                                        {item.name}
+                                                    </h3>
+                                                    <button
+                                                        onClick={() => removeItem(item.dishId)}
+                                                        className="text-gray-400 hover:text-red-500 transition-colors p-1 -mr-2 -mt-2"
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </button>
+                                                </div>
 
-                                            <div className="flex items-center gap-2">
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    onClick={() => updateQuantity(item.dishId, item.quantity - 1)}
-                                                >
-                                                    -
-                                                </Button>
-                                                <span className="font-semibold w-8 text-center">{item.quantity}</span>
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => updateQuantity(item.dishId, item.quantity + 1)}
-                                                    className="bg-[#FB732F] hover:bg-[#FB732F]/90"
-                                                >
-                                                    +
-                                                </Button>
-                                            </div>
+                                                <div className="flex items-end justify-between mt-2">
+                                                    <p className="text-[#FB732F] font-bold text-sm">
+                                                        ${item.price}
+                                                    </p>
 
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => removeItem(item.dishId)}
-                                                className="text-red-500 hover:text-red-700"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </Button>
+                                                    <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-1">
+                                                        <button
+                                                            className="w-6 h-6 flex items-center justify-center bg-white rounded shadow-sm text-gray-600 hover:text-[#FB732F] active:scale-95 transition-all disabled:opacity-50"
+                                                            onClick={() => updateQuantity(item.dishId, item.quantity - 1)}
+                                                            disabled={item.quantity <= 1}
+                                                        >
+                                                            -
+                                                        </button>
+                                                        <span className="font-semibold w-4 text-center text-sm">
+                                                            {item.quantity}
+                                                        </span>
+                                                        <button
+                                                            className="w-6 h-6 flex items-center justify-center bg-[#FB732F] text-white rounded shadow-sm hover:bg-[#FB732F]/90 active:scale-95 transition-all"
+                                                            onClick={() => updateQuantity(item.dishId, item.quantity + 1)}
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </CardContent>
                                 </Card>
