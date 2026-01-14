@@ -21,13 +21,20 @@ export async function GET(request: Request) {
         await connectDB()
 
         // Obtener todas las categorías ordenadas
-        const categories = await Category.find({}).sort({ orden: 1 })
+        const categories = await Category.find({}).sort({ orden: 1 }).lean()
 
         // Obtener todos los platos disponibles
         const dishes = await Dish.find({ disponible: true }).sort({ ventas: -1 })
 
         console.log('📊 Categorías encontradas:', categories.length)
         console.log('📊 Platos encontrados:', dishes.length)
+
+        // 🔍 DEBUG: Ver qué trae cada categoría
+        console.log('🔍 Templates de categorías:', categories.map(c => ({
+            nombre: c.nombre,
+            template: c.template,
+            tieneTemplate: !!c.template
+        })))
 
         if (!dishes || dishes.length === 0) {
             return NextResponse.json({
@@ -55,17 +62,27 @@ export async function GET(request: Request) {
         })
 
         // Agrupar platos por categoría
-        const dishesByCategory = categories.map(category => ({
-            category: {
+        const dishesByCategory = categories.map(category => {
+            const categoryData = {
                 _id: category._id.toString(),
                 name: category.nombre,
                 description: category.descripcion || '',
-                template: category.template || 'grid'  // ← NUEVA LÍNEA
-            },
-            dishes: dishes
-                .filter(dish => dish.categoria === category.nombre)
-                .map(transformDish)
-        })).filter(group => group.dishes.length > 0)
+                template: category.template || 'grid'
+            }
+
+            // 🔍 DEBUG: Ver cada categoría procesada
+            console.log(`📦 Procesando categoría: ${category.nombre}`, {
+                templateOriginal: category.template,
+                templateFinal: categoryData.template
+            })
+
+            return {
+                category: categoryData,
+                dishes: dishes
+                    .filter(dish => dish.categoria === category.nombre)
+                    .map(transformDish)
+            }
+        }).filter(group => group.dishes.length > 0)
 
         // Obtener platos recomendados (los más vendidos)
         const recommended = dishes
@@ -81,6 +98,13 @@ export async function GET(request: Request) {
             categories: dishesByCategory.length,
             allDishes: allDishes.length
         })
+
+        // 🔍 DEBUG: Ver estructura final antes de enviar
+        console.log('🔍 Categorías finales con templates:', dishesByCategory.map(c => ({
+            nombre: c.category.name,
+            template: c.category.template,
+            platos: c.dishes.length
+        })))
 
         return NextResponse.json({
             recommended,
