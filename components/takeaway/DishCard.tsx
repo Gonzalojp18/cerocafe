@@ -5,19 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Star } from 'lucide-react'
 import Image from 'next/image'
+import { Dish } from '@/types/dish'
 
 type DishCardProps = {
-    dish: {
-        _id: string
-        name: string
-        description: string
-        basePrice: number
-        price: number
-        image?: string
-        category?: string
-        popularity?: number
-    }
-    onAddToCart: (dish: any) => void
+    dish: Dish
+    onAddToCart: (dish: Dish) => void
     variant?: 'recommended' | 'default' | 'minimal-compact'
 }
 

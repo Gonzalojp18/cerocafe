@@ -5,15 +5,7 @@ import Image from 'next/image'
 import { Plus, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-
-type Dish = {
-    _id: string
-    name: string
-    description: string
-    price: number
-    image?: string
-    popularity?: number
-}
+import { Dish } from '@/types/dish'
 
 interface FeaturedTemplateProps {
     dishes: Dish[]

@@ -3,17 +3,7 @@
 import { Flame } from 'lucide-react'
 import { motion } from 'framer-motion'
 import DishCard from './DishCard'
-
-type Dish = {
-    _id: string
-    name: string
-    description: string
-    basePrice: number
-    price: number
-    image?: string
-    category: string
-    popularity: number
-}
+import { Dish } from '@/types/dish'
 
 type RecommendedCarouselProps = {
     dishes: Dish[]

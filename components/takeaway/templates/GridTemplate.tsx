@@ -4,14 +4,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-type Dish = {
-    _id: string
-    name: string
-    description: string
-    price: number
-    image?: string
-}
+import { Dish } from '@/types/dish'
 
 interface GridTemplateProps {
     dishes: Dish[]

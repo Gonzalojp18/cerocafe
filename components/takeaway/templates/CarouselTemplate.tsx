@@ -5,14 +5,7 @@ import Image from 'next/image'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRef } from 'react'
-
-type Dish = {
-    _id: string
-    name: string
-    description: string
-    price: number
-    image?: string
-}
+import { Dish } from '@/types/dish'
 
 interface CarouselTemplateProps {
     dishes: Dish[]

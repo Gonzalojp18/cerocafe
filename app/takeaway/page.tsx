@@ -22,17 +22,7 @@ import Link from 'next/link'
 import RecommendedCarousel from '@/components/takeaway/RecommendedCarousel'
 import CategorySection from '@/components/takeaway/CategorySection'
 import CategoryNav from '@/components/takeaway/CategoryNav'
-
-type Dish = {
-    _id: string
-    name: string
-    description: string
-    basePrice: number
-    price: number
-    image?: string
-    category: string
-    popularity: number
-}
+import { Dish } from '@/types/dish'
 
 type CategoryGroup = {
     category: {
