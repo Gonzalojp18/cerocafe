@@ -6,6 +6,7 @@ declare module 'next-auth' {
         role: string
         points: number
         dni?: string
+        image?: string | null
     }
 
     interface Session {
@@ -16,6 +17,7 @@ declare module 'next-auth' {
             role: string
             points: number
             dni?: string
+            image?: string | null
         }
     }
 }
