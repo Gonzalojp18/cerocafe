@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Abril_Fatface } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
+import NavWrapper from '@/components/NavWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 const abrilFatface = Abril_Fatface({
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className={`${inter.className} ${abrilFatface.variable}`}>
         <Providers>
           {children}
+          <NavWrapper />
         </Providers>
       </body>
     </html>
