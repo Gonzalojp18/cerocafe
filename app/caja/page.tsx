@@ -405,7 +405,7 @@ export default function CajaPage() {
                   {/* Gestión de puntos */}
                   <div className="border-t pt-4 mt-4">
                     <p className="text-sm font-semibold mb-3">Gestión de puntos</p>
-                    <div className="flex gap-3 mb-3">
+                    <div className="flex flex-col sm:flex-row gap-3 mb-3">
                       <Input
                         type="number"
                         placeholder="Cantidad de puntos"
@@ -414,20 +414,23 @@ export default function CajaPage() {
                         className="flex-1"
                         min="1"
                       />
-                      <Button
-                        onClick={() => gestionarPuntos('add')}
-                        disabled={procesando}
-                        className="bg-[#FB732F] hover:bg-[#FB732F]/90"
-                      >
-                        Agregar
-                      </Button>
-                      <Button
-                        onClick={() => gestionarPuntos('subtract')}
-                        disabled={procesando}
-                        variant="destructive"
-                      >
-                        Restar
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => gestionarPuntos('add')}
+                          disabled={procesando}
+                          className="bg-[#FB732F] hover:bg-[#FB732F]/90 flex-1 sm:flex-none"
+                        >
+                          Agregar
+                        </Button>
+                        <Button
+                          onClick={() => gestionarPuntos('subtract')}
+                          disabled={procesando}
+                          variant="destructive"
+                          className="flex-1 sm:flex-none"
+                        >
+                          Restar
+                        </Button>
+                      </div>
                     </div>
 
                     <Button
@@ -506,7 +509,7 @@ export default function CajaPage() {
       {vistaActual === 'ordenes' && (
         <>
           {/* Filtros de órdenes */}
-          <div className="flex gap-2 mb-6">
+          <div className="flex gap-2 mb-6 flex-wrap">
             <button
               onClick={() => setFiltroOrden('all')}
               className={`px-4 py-2 rounded ${filtroOrden === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
@@ -553,14 +556,14 @@ export default function CajaPage() {
               {ordenes.map((orden) => (
                 <Card key={orden._id}>
                   <CardHeader>
-                    <div className="flex justify-between items-start">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0">
                       <div>
                         <CardTitle className="text-xl">{orden.orderNumber}</CardTitle>
                         <p className="text-sm text-gray-600">
                           {formatearFecha(orden.createdAt)}
                         </p>
                       </div>
-                      <Badge className={getStatusColor(orden.status)}>
+                      <Badge className={`w-fit ${getStatusColor(orden.status)}`}>
                         {orden.status}
                       </Badge>
                     </div>

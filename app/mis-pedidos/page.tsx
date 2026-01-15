@@ -142,7 +142,7 @@ export default function MisPedidosPage() {
                         {orders.map((order) => (
                             <Card key={order._id}>
                                 <CardHeader>
-                                    <div className="flex justify-between items-start">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0">
                                         <div>
                                             <CardTitle className="text-xl">
                                                 {order.orderNumber}
@@ -151,7 +151,7 @@ export default function MisPedidosPage() {
                                                 {formatearFecha(order.createdAt)}
                                             </p>
                                         </div>
-                                        <Badge className={getStatusColor(order.status)}>
+                                        <Badge className={`w-fit mt-1 sm:mt-0 ${getStatusColor(order.status)}`}>
                                             {getStatusText(order.status)}
                                         </Badge>
                                     </div>
