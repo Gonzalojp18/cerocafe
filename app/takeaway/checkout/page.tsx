@@ -44,23 +44,44 @@ export default function CheckoutPage() {
         setProcesando(true)
 
         try {
-            // Aquí irá la lógica de crear el pedido
-            console.log('Pedido:', {
-                items,
-                total,
-                formData,
-                userId: session?.user?.id
+            // ✅ LLAMAR A LA API CON LA ESTRUCTURA CORRECTA
+            const response = await fetch('/api/orders/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    items: items.map(item => ({
+                        dishId: item.dishId,
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity
+                    })),
+                    total,
+                    customer: {
+                        name: formData.nombre,
+                        phone: formData.telefono,
+                        email: session?.user?.email || ''
+                    },
+                    deliveryType: formData.direccion ? 'delivery' : 'pickup',
+                    address: formData.direccion || undefined
+                })
             })
 
-            // Simular delay
-            await new Promise(resolve => setTimeout(resolve, 1500))
+            const data = await response.json()
 
-            alert('¡Pedido realizado exitosamente!')
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al crear el pedido')
+            }
+
+            // ✅ Pedido creado exitosamente
+            alert(`¡Pedido ${data.order.orderNumber} realizado exitosamente!`)
             clearCart()
             router.push('/takeaway')
+
         } catch (error) {
             console.error('Error al procesar pedido:', error)
-            alert('Error al procesar el pedido')
+            alert(error instanceof Error ? error.message : 'Error al procesar el pedido')
         } finally {
             setProcesando(false)
         }
