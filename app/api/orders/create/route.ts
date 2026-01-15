@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import connectDB from '@/lib/mongodb'
+import mongoose from 'mongoose'
 import Order from '@/models/Order'
 
 // Función para generar número de orden único
