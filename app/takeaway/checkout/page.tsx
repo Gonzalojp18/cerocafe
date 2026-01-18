@@ -44,45 +44,29 @@ export default function CheckoutPage() {
         setProcesando(true)
 
         try {
-            // ✅ LLAMAR A LA API CON LA ESTRUCTURA CORRECTA
-            const response = await fetch('/api/orders/create', {
+            // Crear preferencia de pago en MercadoPago
+            const response = await fetch('/api/orders/create-payment', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    items: items.map(item => ({
-                        dishId: item.dishId,
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity
-                    })),
+                    items,
                     total,
-                    customer: {
-                        name: formData.nombre,
-                        phone: formData.telefono,
-                        email: session?.user?.email || ''
-                    },
-                    deliveryType: formData.direccion ? 'delivery' : 'pickup',
-                    address: formData.direccion || undefined
+                    customerData: formData
                 })
             })
 
             const data = await response.json()
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Error al crear el pedido')
+            if (response.ok && data.init_point) {
+                // Redirigir a MercadoPago
+                window.location.href = data.init_point
+            } else {
+                alert(data.error || 'Error al procesar el pago')
+                setProcesando(false)
             }
-
-            // ✅ Pedido creado exitosamente
-            alert(`¡Pedido ${data.order.orderNumber} realizado exitosamente!`)
-            clearCart()
-            router.push('/takeaway')
-
         } catch (error) {
             console.error('Error al procesar pedido:', error)
-            alert(error instanceof Error ? error.message : 'Error al procesar el pedido')
-        } finally {
+            alert('Error al procesar el pedido')
             setProcesando(false)
         }
     }
@@ -162,7 +146,7 @@ export default function CheckoutPage() {
                                         disabled={procesando}
                                         className="w-full bg-[#FB732F] hover:bg-[#FB732F]/90 py-6 text-lg"
                                     >
-                                        {procesando ? 'Procesando...' : `Confirmar Pedido - $${total}`}
+                                        {procesando ? 'Redirigiendo a pago...' : `Ir a pagar - $${total}`}
                                     </Button>
                                 </form>
                             </CardContent>
