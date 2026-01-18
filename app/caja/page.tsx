@@ -8,8 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Bell, ArrowLeft, Settings, History, ShoppingBag } from 'lucide-react'
+import { Bell, ArrowLeft, Settings, History, ShoppingBag, Printer, Check } from 'lucide-react'
 
+// Tipos
 type Transaction = {
   _id: string
   staffName: string
@@ -27,11 +28,13 @@ type Order = {
   customer: {
     name: string
     phone: string
+    address?: string
   }
   deliveryType: string
   total: number
   status: string
   createdAt: string
+  paymentId?: string
   items: Array<{
     name: string
     quantity: number
@@ -43,22 +46,24 @@ export default function CajaPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
 
-  // Estados de clientes
+  // Estados compartidos
+  const [activeTab, setActiveTab] = useState<'puntos' | 'ordenes'>('puntos')
+
+  // Estados de Gestión de Puntos
   const [dni, setDni] = useState('')
   const [cliente, setCliente] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [puntosInput, setPuntosInput] = useState('')
   const [procesando, setProcesando] = useState(false)
-  const [enviandoNotificacion, setEnviandoNotificacion] = useState(false)
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loadingTransactions, setLoadingTransactions] = useState(false)
 
-  // Estados de órdenes
-  const [ordenes, setOrdenes] = useState<Order[]>([])
-  const [loadingOrdenes, setLoadingOrdenes] = useState(false)
-  const [filtroOrden, setFiltroOrden] = useState<string>('pending')
-  const [vistaActual, setVistaActual] = useState<'puntos' | 'ordenes'>('puntos')
+  // Estados de Órdenes
+  const [orders, setOrders] = useState<Order[]>([])
+  const [loadingOrders, setLoadingOrders] = useState(false)
+  const [filterStatus, setFilterStatus] = useState<string>('paid_pending')
+  const [processingOrders, setProcessingOrders] = useState<Set<string>>(new Set())
 
   // Protección de ruta
   useEffect(() => {
@@ -75,12 +80,19 @@ export default function CajaPage() {
     }
   }, [session, status, router])
 
-  // Cargar órdenes cuando cambia el filtro
+  // Cargar órdenes cuando se activa la pestaña
   useEffect(() => {
-    if (vistaActual === 'ordenes' && (session?.user?.role === 'staff' || session?.user?.role === 'owner')) {
-      cargarOrdenes(filtroOrden)
+    if (activeTab === 'ordenes') {
+      fetchOrders(filterStatus)
+
+      // Auto-refresh cada 30 segundos
+      const interval = setInterval(() => {
+        fetchOrders(filterStatus)
+      }, 30000)
+
+      return () => clearInterval(interval)
     }
-  }, [session, filtroOrden, vistaActual])
+  }, [activeTab, filterStatus])
 
   if (status === 'loading') {
     return (
@@ -94,6 +106,8 @@ export default function CajaPage() {
     return null
   }
 
+  // ========== FUNCIONES DE GESTIÓN DE PUNTOS ==========
+
   const buscarCliente = async () => {
     if (!dni) {
       setError('Ingresa un DNI')
@@ -106,9 +120,7 @@ export default function CajaPage() {
     setTransactions([])
 
     try {
-      const response = await fetch(`/api/customers/search?dni=${dni}`, {
-        cache: 'no-store'
-      })
+      const response = await fetch(`/api/customers/search?dni=${dni}`)
       const data = await response.json()
 
       if (response.ok) {
@@ -118,7 +130,6 @@ export default function CajaPage() {
         setError(data.error || 'Cliente no encontrado')
       }
     } catch (err) {
-      console.error('❌ Error al buscar cliente:', err)
       setError('Error al buscar cliente')
     } finally {
       setLoading(false)
@@ -138,48 +149,6 @@ export default function CajaPage() {
       console.error('Error al cargar historial:', error)
     } finally {
       setLoadingTransactions(false)
-    }
-  }
-
-  const cargarOrdenes = async (status: string = 'pending') => {
-    setLoadingOrdenes(true)
-    try {
-      const url = status === 'all'
-        ? '/api/orders'
-        : `/api/orders?status=${status}`
-
-      const response = await fetch(url)
-      const data = await response.json()
-
-      if (data.success) {
-        setOrdenes(data.orders)
-      }
-    } catch (error) {
-      console.error('Error al cargar órdenes:', error)
-    } finally {
-      setLoadingOrdenes(false)
-    }
-  }
-
-  const actualizarEstadoOrden = async (orderId: string, newStatus: string) => {
-    try {
-      const response = await fetch(`/api/orders/${orderId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        cargarOrdenes(filtroOrden)
-        alert(`Orden actualizada a: ${newStatus}`)
-      } else {
-        alert('Error al actualizar orden')
-      }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('Error al actualizar orden')
     }
   }
 
@@ -209,7 +178,6 @@ export default function CajaPage() {
       if (response.ok) {
         const nuevosPuntos = data.newPoints
         setCliente({ ...cliente, points: nuevosPuntos })
-        await enviarNotificacionAutomatica(accion, puntos, nuevosPuntos)
         await cargarHistorial(cliente.dni)
         setPuntosInput('')
         alert(`Puntos ${accion === 'add' ? 'agregados' : 'restados'} exitosamente`)
@@ -217,60 +185,9 @@ export default function CajaPage() {
         alert(data.error || 'Error al gestionar puntos')
       }
     } catch (err) {
-      console.error('❌ Error al procesar solicitud:', err)
       alert('Error al procesar la solicitud')
     } finally {
       setProcesando(false)
-    }
-  }
-
-  const enviarNotificacionAutomatica = async (accion: 'add' | 'subtract', puntos: number, nuevosPuntos: number) => {
-    try {
-      const title = accion === 'add' ? '🎉 ¡Puntos agregados!' : '📉 Puntos canjeados'
-      const body = accion === 'add'
-        ? `Se agregaron ${puntos} puntos. Total: ${nuevosPuntos} puntos`
-        : `Se restaron ${puntos} puntos. Total: ${nuevosPuntos} puntos`
-
-      await fetch('/api/notifications/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: cliente._id,
-          title,
-          body
-        })
-      })
-    } catch (error) {
-      console.error('Error al enviar notificación automática:', error)
-    }
-  }
-
-  const enviarNotificacionManual = async () => {
-    if (!cliente) return
-
-    setEnviandoNotificacion(true)
-    try {
-      const response = await fetch('/api/notifications/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: cliente._id,
-          title: '👋 Mensaje desde Cero',
-          body: `Hola ${cliente.name}, tienes ${cliente.points} puntos acumulados`
-        })
-      })
-
-      if (response.ok) {
-        alert('✅ Notificación enviada exitosamente')
-      } else {
-        const data = await response.json()
-        alert(data.error || 'Error al enviar notificación')
-      }
-    } catch (error) {
-      console.error('Error al enviar notificación manual:', error)
-      alert('Error al enviar notificación')
-    } finally {
-      setEnviandoNotificacion(false)
     }
   }
 
@@ -284,20 +201,134 @@ export default function CajaPage() {
     })
   }
 
-  const getStatusColor = (status: string) => {
-    const colors: any = {
-      pending: 'bg-yellow-500',
-      confirmed: 'bg-blue-500',
-      preparing: 'bg-purple-500',
-      ready: 'bg-green-500',
-      delivered: 'bg-gray-500',
-      cancelled: 'bg-red-500'
+  // ========== FUNCIONES DE ÓRDENES ==========
+
+  const fetchOrders = async (status: string = 'all') => {
+    setLoadingOrders(true)
+    try {
+      const url = status === 'all'
+        ? '/api/orders'
+        : `/api/orders?status=${status}`
+
+      const response = await fetch(url)
+      const data = await response.json()
+
+      if (data.success) {
+        setOrders(data.orders)
+      }
+    } catch (error) {
+      console.error('Error al cargar órdenes:', error)
+    } finally {
+      setLoadingOrders(false)
     }
-    return colors[status] || 'bg-gray-500'
+  }
+
+  const confirmOrder = async (orderId: string) => {
+    if (!confirm('¿Confirmar este pedido? Se imprimirá automáticamente.')) {
+      return
+    }
+
+    setProcessingOrders(prev => new Set(prev).add(orderId))
+
+    try {
+      // 1. Imprimir pedido
+      const printResponse = await fetch('/api/orders/print', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId })
+      })
+
+      if (!printResponse.ok) {
+        throw new Error('Error al imprimir')
+      }
+
+      // 2. Actualizar estado
+      const updateResponse = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'confirmed' })
+      })
+
+      const data = await updateResponse.json()
+
+      if (data.success) {
+        alert('✅ Pedido confirmado e impreso exitosamente')
+        fetchOrders(filterStatus)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error al confirmar pedido')
+    } finally {
+      setProcessingOrders(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(orderId)
+        return newSet
+      })
+    }
+  }
+
+  const printOrder = async (orderId: string) => {
+    setProcessingOrders(prev => new Set(prev).add(orderId))
+
+    try {
+      const response = await fetch('/api/orders/print', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId })
+      })
+
+      if (response.ok) {
+        alert('✅ Pedido enviado a impresora')
+      }
+    } catch (error) {
+      alert('Error al imprimir')
+    } finally {
+      setProcessingOrders(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(orderId)
+        return newSet
+      })
+    }
+  }
+
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        fetchOrders(filterStatus)
+        alert(`Orden actualizada a: ${newStatus}`)
+      }
+    } catch (error) {
+      alert('Error al actualizar orden')
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig: Record<string, { label: string; color: string }> = {
+      paid_pending: { label: 'Pago Confirmado', color: 'bg-yellow-500' },
+      confirmed: { label: 'En Preparación', color: 'bg-blue-500' },
+      ready: { label: 'Listo', color: 'bg-green-500' },
+      completed: { label: 'Completado', color: 'bg-gray-500' }
+    }
+
+    const config = statusConfig[status] || { label: status, color: 'bg-gray-400' }
+
+    return (
+      <Badge className={`${config.color} text-white`}>
+        {config.label}
+      </Badge>
+    )
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className="container mx-auto p-6 max-w-7xl">
       {/* Navigation */}
       <div className="flex flex-wrap gap-4 mb-6">
         <Link href="/">
@@ -322,31 +353,37 @@ export default function CajaPage() {
         Usuario: {session?.user?.name} ({session?.user?.role})
       </p>
 
-      {/* Tabs para alternar vistas */}
+      {/* Pestañas */}
       <div className="flex gap-2 mb-6 border-b">
         <button
-          onClick={() => setVistaActual('puntos')}
-          className={`px-4 py-2 font-medium ${vistaActual === 'puntos'
+          onClick={() => setActiveTab('puntos')}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'puntos'
             ? 'border-b-2 border-[#FB732F] text-[#FB732F]'
-            : 'text-gray-500'
+            : 'text-gray-500 hover:text-gray-700'
             }`}
         >
+          <History className="h-4 w-4 inline mr-2" />
           Gestión de Puntos
         </button>
         <button
-          onClick={() => setVistaActual('ordenes')}
-          className={`px-4 py-2 font-medium ${vistaActual === 'ordenes'
+          onClick={() => setActiveTab('ordenes')}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'ordenes'
             ? 'border-b-2 border-[#FB732F] text-[#FB732F]'
-            : 'text-gray-500'
+            : 'text-gray-500 hover:text-gray-700'
             }`}
         >
           <ShoppingBag className="h-4 w-4 inline mr-2" />
           Órdenes
+          {orders.filter(o => o.status === 'paid_pending').length > 0 && (
+            <Badge className="ml-2 bg-red-500">
+              {orders.filter(o => o.status === 'paid_pending').length}
+            </Badge>
+          )}
         </button>
       </div>
 
-      {/* VISTA: Gestión de Puntos */}
-      {vistaActual === 'puntos' && (
+      {/* CONTENIDO: GESTIÓN DE PUNTOS */}
+      {activeTab === 'puntos' && (
         <>
           {/* Buscador de cliente */}
           <Card className="mb-6">
@@ -377,7 +414,6 @@ export default function CajaPage() {
           {/* Información del cliente */}
           {cliente && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Card de gestión de puntos */}
               <Card>
                 <CardHeader>
                   <CardTitle>Información del Cliente</CardTitle>
@@ -402,10 +438,9 @@ export default function CajaPage() {
                     </div>
                   </div>
 
-                  {/* Gestión de puntos */}
                   <div className="border-t pt-4 mt-4">
                     <p className="text-sm font-semibold mb-3">Gestión de puntos</p>
-                    <div className="flex flex-col sm:flex-row gap-3 mb-3">
+                    <div className="flex gap-3 mb-3">
                       <Input
                         type="number"
                         placeholder="Cantidad de puntos"
@@ -414,40 +449,25 @@ export default function CajaPage() {
                         className="flex-1"
                         min="1"
                       />
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() => gestionarPuntos('add')}
-                          disabled={procesando}
-                          className="bg-[#FB732F] hover:bg-[#FB732F]/90 flex-1 sm:flex-none"
-                        >
-                          Agregar
-                        </Button>
-                        <Button
-                          onClick={() => gestionarPuntos('subtract')}
-                          disabled={procesando}
-                          variant="destructive"
-                          className="flex-1 sm:flex-none"
-                        >
-                          Restar
-                        </Button>
-                      </div>
+                      <Button
+                        onClick={() => gestionarPuntos('add')}
+                        disabled={procesando}
+                        className="bg-[#FB732F] hover:bg-[#FB732F]/90"
+                      >
+                        Agregar
+                      </Button>
+                      <Button
+                        onClick={() => gestionarPuntos('subtract')}
+                        disabled={procesando}
+                        variant="destructive"
+                      >
+                        Restar
+                      </Button>
                     </div>
-
-                    <Button
-                      onClick={enviarNotificacionManual}
-                      disabled={enviandoNotificacion}
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
-                    >
-                      <Bell className="h-4 w-4 mr-2" />
-                      {enviandoNotificacion ? 'Enviando...' : 'Enviar notificación de prueba'}
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Card de historial */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -505,79 +525,86 @@ export default function CajaPage() {
         </>
       )}
 
-      {/* VISTA: Órdenes */}
-      {vistaActual === 'ordenes' && (
+      {/* CONTENIDO: ÓRDENES */}
+      {activeTab === 'ordenes' && (
         <>
-          {/* Filtros de órdenes */}
+          {/* Filtros */}
           <div className="flex gap-2 mb-6 flex-wrap">
-            <button
-              onClick={() => setFiltroOrden('all')}
-              className={`px-4 py-2 rounded ${filtroOrden === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            <Button
+              onClick={() => setFilterStatus('all')}
+              variant={filterStatus === 'all' ? 'default' : 'outline'}
             >
               Todas
-            </button>
-            <button
-              onClick={() => setFiltroOrden('pending')}
-              className={`px-4 py-2 rounded ${filtroOrden === 'pending' ? 'bg-yellow-500 text-white' : 'bg-gray-200'}`}
+            </Button>
+            <Button
+              onClick={() => setFilterStatus('paid_pending')}
+              variant={filterStatus === 'paid_pending' ? 'default' : 'outline'}
+              className="bg-yellow-500 hover:bg-yellow-600"
             >
-              Pendientes
-            </button>
-            <button
-              onClick={() => setFiltroOrden('confirmed')}
-              className={`px-4 py-2 rounded ${filtroOrden === 'confirmed' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            >
-              Confirmadas
-            </button>
-            <button
-              onClick={() => setFiltroOrden('preparing')}
-              className={`px-4 py-2 rounded ${filtroOrden === 'preparing' ? 'bg-purple-500 text-white' : 'bg-gray-200'}`}
+              Pendientes ({orders.filter(o => o.status === 'paid_pending').length})
+            </Button>
+            <Button
+              onClick={() => setFilterStatus('confirmed')}
+              variant={filterStatus === 'confirmed' ? 'default' : 'outline'}
             >
               En Preparación
-            </button>
-            <button
-              onClick={() => setFiltroOrden('ready')}
-              className={`px-4 py-2 rounded ${filtroOrden === 'ready' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+            </Button>
+            <Button
+              onClick={() => setFilterStatus('ready')}
+              variant={filterStatus === 'ready' ? 'default' : 'outline'}
             >
-              Listas
-            </button>
+              Listos
+            </Button>
           </div>
 
           {/* Lista de órdenes */}
-          {loadingOrdenes ? (
-            <p>Cargando órdenes...</p>
-          ) : ordenes.length === 0 ? (
+          {loadingOrders ? (
             <Card>
-              <CardContent className="p-6 text-center text-gray-500">
-                No hay órdenes con el estado seleccionado
+              <CardContent className="p-8 text-center">
+                Cargando órdenes...
+              </CardContent>
+            </Card>
+          ) : orders.length === 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center text-gray-500">
+                No hay órdenes en este estado
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-4">
-              {ordenes.map((orden) => (
-                <Card key={orden._id}>
+              {orders.map((order) => (
+                <Card key={order._id} className={order.status === 'paid_pending' ? 'border-yellow-500 border-2' : ''}>
                   <CardHeader>
-                    <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0">
+                    <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle className="text-xl">{orden.orderNumber}</CardTitle>
+                        <CardTitle className="text-xl">
+                          {order.orderNumber}
+                        </CardTitle>
                         <p className="text-sm text-gray-600">
-                          {formatearFecha(orden.createdAt)}
+                          {new Date(order.createdAt).toLocaleString('es-AR')}
                         </p>
+                        {order.paymentId && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Pago ID: {order.paymentId}
+                          </p>
+                        )}
                       </div>
-                      <Badge className={`w-fit ${getStatusColor(orden.status)}`}>
-                        {orden.status}
-                      </Badge>
+                      {getStatusBadge(order.status)}
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      <p><strong>Cliente:</strong> {orden.customer.name}</p>
-                      <p><strong>Teléfono:</strong> {orden.customer.phone}</p>
-                      <p><strong>Tipo:</strong> {orden.deliveryType === 'delivery' ? 'Delivery' : 'Retiro'}</p>
+                      <p><strong>Cliente:</strong> {order.customer.name}</p>
+                      <p><strong>Teléfono:</strong> {order.customer.phone}</p>
+                      {order.customer.address && (
+                        <p><strong>Dirección:</strong> {order.customer.address}</p>
+                      )}
+                      <p><strong>Tipo:</strong> {order.deliveryType === 'delivery' ? 'Delivery' : 'Retiro'}</p>
 
                       <div className="mt-4">
                         <strong>Items:</strong>
                         <ul className="mt-2 space-y-1">
-                          {orden.items.map((item, idx) => (
+                          {order.items.map((item, idx) => (
                             <li key={idx} className="text-sm">
                               {item.quantity}x {item.name} - ${item.price * item.quantity}
                             </li>
@@ -585,39 +612,50 @@ export default function CajaPage() {
                         </ul>
                       </div>
 
-                      <p className="text-lg font-bold mt-4">Total: ${orden.total}</p>
+                      <p className="text-lg font-bold mt-4">
+                        Total: ${order.total}
+                      </p>
+                    </div>
 
-                      {/* Botones de acciones */}
-                      <div className="flex gap-2 mt-4 flex-wrap">
+                    {/* Botones de acción */}
+                    <div className="flex gap-2 mt-6 flex-wrap">
+                      {order.status === 'paid_pending' && (
                         <Button
-                          onClick={() => actualizarEstadoOrden(orden._id, 'confirmed')}
-                          size="sm"
-                          className="bg-green-500 hover:bg-green-600"
+                          onClick={() => confirmOrder(order._id)}
+                          disabled={processingOrders.has(order._id)}
+                          className="bg-green-600 hover:bg-green-700"
                         >
-                          Confirmar
+                          <Check className="h-4 w-4 mr-2" />
+                          {processingOrders.has(order._id) ? 'Procesando...' : 'Confirmar e Imprimir'}
                         </Button>
+                      )}
+
+                      <Button
+                        onClick={() => printOrder(order._id)}
+                        disabled={processingOrders.has(order._id)}
+                        variant="outline"
+                      >
+                        <Printer className="h-4 w-4 mr-2" />
+                        Reimprimir
+                      </Button>
+
+                      {order.status === 'confirmed' && (
                         <Button
-                          onClick={() => actualizarEstadoOrden(orden._id, 'preparing')}
-                          size="sm"
-                          className="bg-blue-500 hover:bg-blue-600"
+                          onClick={() => updateOrderStatus(order._id, 'ready')}
+                          className="bg-purple-600 hover:bg-purple-700"
                         >
-                          Preparando
+                          Marcar Listo
                         </Button>
+                      )}
+
+                      {order.status === 'ready' && (
                         <Button
-                          onClick={() => actualizarEstadoOrden(orden._id, 'ready')}
-                          size="sm"
-                          className="bg-purple-500 hover:bg-purple-600"
+                          onClick={() => updateOrderStatus(order._id, 'completed')}
+                          className="bg-gray-600 hover:bg-gray-700"
                         >
-                          Listo
+                          Marcar Entregado
                         </Button>
-                        <Button
-                          onClick={() => actualizarEstadoOrden(orden._id, 'delivered')}
-                          size="sm"
-                          variant="secondary"
-                        >
-                          Entregado
-                        </Button>
-                      </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
