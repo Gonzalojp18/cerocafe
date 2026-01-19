@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import connectDB from '@/lib/mongodb'
 import mongoose from 'mongoose'
+import Order from '@/models/Order'
 
 export async function POST(request: Request) {
     try {
@@ -27,11 +28,7 @@ export async function POST(request: Request) {
 
         // Buscar la orden en la base de datos
         await connectDB()
-        const ordersCollection = mongoose.connection.db.collection('orders')
-
-        const order = await ordersCollection.findOne({
-            _id: new mongoose.Types.ObjectId(orderId)
-        })
+        const order = await Order.findById(orderId)
 
         if (!order) {
             return NextResponse.json(
